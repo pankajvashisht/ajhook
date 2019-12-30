@@ -4,8 +4,7 @@ const { UserController, DriverController, ProductController, ShopController } = 
 const { userSignup } = require('../src/Request');
 const { UserAuth, cross, Language } = require('../src/middleware/index');
 const Apiresponse = require('../libary/ApiResponse');
-let user = new UserController();
-const chat = new ChatController();
+const user = new UserController();
 
 router.use([ cross, Language, UserAuth ]);
 router.get('/', function(req, res) {
@@ -29,10 +28,10 @@ router.post('/complete-order', Apiresponse(DriverController.CompleteOrders));
 router.post('/track-driver', Apiresponse(DriverController.TrackDriver));
 router
 	.route('/products/:offset([0-9]+)?/')
-	.get(response(ProductController.getProduct))
-	.post(response(ProductController.addProduct))
-	.put(response(ProductController.updateProduct))
-	.delete(response(ProductController.deleteProduct));
+	.get(Apiresponse(ProductController.getProduct))
+	.post(Apiresponse(ProductController.addProduct))
+	.put(Apiresponse(ProductController.updateProduct))
+	.delete(Apiresponse(ProductController.deleteProduct));
 
 
 module.exports = router;

@@ -17,10 +17,24 @@ module.exports = {
 		const condition = {
 			conditions: {
 				user_type: 2,
-				10 : `< ( 6371 * acos( cos( radians(${lalitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${lalitude}) ) * sin(radians(latitude)) ) )`
+				status:1,
 			},
-			join: ['tags on (classes.tag_id = tags.id)'],
-			fields:['users.*' ,`IFNULL((select avg(rating) from rating where  user_id=users.id),0) as rating`],
+			fields:['id',
+				'name',
+				'status',
+				'is_free',
+				'is_online',
+				'email',
+				'phone',
+				'phone_code',
+				'profile',
+				'address',
+				'user_type',
+				'latitude',
+				'longitude' ,`IFNULL((select avg(rating) from ratings where  user_id=users.id),0) as rating`,
+				`round(( 6371 * acos( cos( radians(${lalitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${lalitude}) ) * sin(radians(latitude)) ) ),0) as total_distance`
+			   ],
+			having: ['total_distance <= 10'],   
 			limit: [ offset, limit ],
 			orderBy: [ 'id desc' ]
 		};
@@ -32,43 +46,34 @@ module.exports = {
 		const result = await DB.find('users', 'all', condition);
 		return {
 			message: 'shop list',
-			data: {
-				pagination: await apis.Paginations('users', condition, offset, limit),
-				result: result
-			}
+			data: app.addUrl(result,'profile')
 		};
 	},
 	orderHoohuk: async (Request) => { 
 		const required = {
 			user_id: Request.body.user_id,
-			shop_id: Request.body.shop_id,
 			product_id: Request.body.product_id,
 			quantity : Request.body.quantity || 1,
-			order_date: RequestData.body.order_date || app.currentTime();
+			order_date: Request.body.order_date || app.currentTime,
 			status: 1
        };
 		const RequestData = await apis.vaildation(required, {});
-		const shop = await DB.find('users', 'first', {
-			conditions: {
-				id: RequestData.shop_id,
-			}
-		});
 		const product = await DB.find('products', 'first', {
 			conditions: {
 				id: RequestData.product_id,
 			}
 		})
 		if (!product) throw new ApiError('Invaild product id', 422);
-		if (!shop) throw new ApiError('Invaild shop id', 422);
-		if(product.stock === 0 && product.stock < RequestData.body.quantity) throw new ApiError('Product out of stocks', 422);
+		RequestData.shop_id = product.user_id;
+		if(product.stock === 0 && product.stock < RequestData.quantity) throw new ApiError('Product out of stocks', 422);
 		RequestData.product_details = JSON.stringify(product);
-		RequestData.price = product.price * RequestData.body.quantity;
-		product.stock -= RequestData.body.quantity;
+		RequestData.price = product.price * RequestData.quantity;
+		product.stock -= RequestData.quantity;
 		DB.save('products', product);
 		RequestData.address_details = JSON.stringify({
-			address: RequestData.body.userInfo.address,
-			lalitude: RequestData.body.userInfo.lalitude,
-			longitude: RequestData.body.userInfo.longitude,
+			address: Request.body.userInfo.address,
+			lalitude: Request.body.userInfo.lalitude,
+			longitude: Request.body.userInfo.longitude,
 		});
 		RequestData.order_id = await DB.save('orders', RequestData);
 		return {
@@ -87,7 +92,6 @@ module.exports = {
 		const condition = {
 			conditions: {
 				id: RequestData.order_id,
-				status: 1
 			}
 		};
 		const result = await DB.find('orders', 'first', condition);
@@ -106,17 +110,11 @@ module.exports = {
 		offset = (offset - 1) * limit;
 		const conditions = {};
 		if (user_type === 1) {
-			conditions = {
-				user_id
-			}
+			
 		} else if (user_type === 2) { 
-			conditions = {
-				shop_id:user_type
-			}
+			conditions['shop_id'] = user_id;
 		} else {
-			conditions = {
-				shop_id:user_type
-			}
+			conditions['driver_id'] = user_id;
 		}
 		const condition = {
 			conditions,
@@ -124,11 +122,19 @@ module.exports = {
 			orderBy: [ 'id desc' ]
 		};
 		const result = await DB.find('orders', 'all', condition);
+		const final = result.map(value => {
+			if(value.product_details){
+				value.product_details = JSON.parse(value.product_details);
+			}if(value.address_details){
+				value.address_details = JSON.parse(value.address_details);
+			}
+			return value;
+		});
 		return {
 			message: 'My orders',
 			data: {
 				pagination: await apis.Paginations('orders', condition, offset, limit),
-				result: result
+				result: final
 			}
 		};
 	 }

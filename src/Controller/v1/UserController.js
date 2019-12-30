@@ -43,9 +43,13 @@ class UserController extends ApiController {
 		}
 		req.body.userInfo.status = 1;
 		await DB.save('users', req.body.userInfo);
+		const usersInfo = await super.userDetails(req.body.userInfo.id);
+		if (usersInfo.profile.length > 0) {
+			usersInfo.profile = appURL + 'uploads/' + usersInfo.profile;
+		}
 		return {
 			message: lang[req.lang].verifyOtp,
-			data: await super.userDetails(req.body.userInfo.id)
+			data:  usersInfo
 		};
 	}
 
@@ -109,7 +113,7 @@ class UserController extends ApiController {
 			conditions: {
 				email: request_data.email
 			},
-			fields: [ 'id', 'email', 'username' ]
+			fields: [ 'id', 'email', 'name' ]
 		});
 		if (!user_info) throw new ApiError(lang[req.lang].mailNotFound);
 		user_info.otp = request_data.otp;
@@ -120,8 +124,8 @@ class UserController extends ApiController {
 			subject: 'Forgot Password',
 			template: 'forgot_password',
 			data: {
-				first_name: user_info.first_name,
-				last_name: user_info.last_name,
+				first_name: user_info.name,
+				last_name: user_info.name,
 				url: appURL + 'users/change_password/' + user_info.forgot_password_hash
 			}
 		};
@@ -202,10 +206,10 @@ class UserController extends ApiController {
 			latitude: req.body.latitude,
 			longitude: req.body.longitude,
 			address: req.body.address,
-			card_informations: Request.body.card_informations,
-			name: Request.body.name,
-			is_free: Request.body.is_free,
-			is_online: Request.body.is_online,
+			card_informations: req.body.card_informations,
+			name: req.body.name,
+			is_free: req.body.is_free,
+			is_online: req.body.is_online,
 		};
 		const request_data = await super.vaildation(required, non_required);
 		if (req.files && req.files.profile) {
@@ -247,7 +251,7 @@ class UserController extends ApiController {
 		};
 		try {
 			app.sendSMS({
-				to: request_data.phone,
+				to: `${request_data.phone_code}${request_data.phone}`,
 				message: `${request_data.otp} ${lang[request_data.lang].OTP}`
 			});
 			app.send_mail(mail);

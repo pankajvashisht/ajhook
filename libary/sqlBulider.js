@@ -107,7 +107,10 @@ class Query {
 					}
 				}
 			}
-
+			if (typeof condition.having != 'undefined') {
+				query += ' having ';
+				query += condition.having.join();
+			}
 			if (typeof condition.group != 'undefined') {
 				// ADD LOGIIC THERE
 			}

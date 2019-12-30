@@ -6,9 +6,7 @@ const passRoute = [
 	'/forgot-password',
 	'/user/login',
 	'/user',
-	'/social-login',
-	'/tags',
-	'/center'
+	'/social-login'
 ];
 const UserAuth = async (req, res, next) => {
 	try {
@@ -24,16 +22,23 @@ const UserAuth = async (req, res, next) => {
 			},
 			fields: [
 				'id',
-				'username',
-				'password',
+				'name',
 				'status',
+				'is_free',
+				'is_online',
 				'email',
 				'phone',
-				'otp',
-				'authorization_key',
+				'phone_code',
 				'profile',
+				'authorization_key',
 				'dob',
-				'address'
+				'address',
+				'user_type',
+				'licence',
+				'latitude',
+				'longitude',
+				'password',
+				'otp'
 			]
 		});
 		if (user_details) {

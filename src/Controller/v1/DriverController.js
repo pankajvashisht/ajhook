@@ -41,7 +41,7 @@ module.exports = {
 			shop_id: Request.body.shop_id,
 			product_id: Request.body.product_id,
 			quantity : Request.body.quantity || 1,
-			order_date: RequestData.body.order_date || app.currentTime();
+			order_date: RequestData.body.order_date || app.currentTime(),
 			status: 1
        };
 		const RequestData = await apis.vaildation(required, {});

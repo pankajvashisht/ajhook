@@ -10,6 +10,7 @@ module.exports = async (Request, res, next) => {
 		latitude: Request.body.latitude,
 		longitude: Request.body.longitude,
 		address: Request.body.address,
+		user_type: Request.body.user_type,
 		checkexist: 1
 	};
 	const non_required = {

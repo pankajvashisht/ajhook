@@ -48,8 +48,8 @@ module.exports = {
 			is_request: 1
 		};
 		const requestData = await apis.vaildation(required, {});
-		if (req.files && req.files.image) {
-			requestData.profile = await app.upload_pic_with_await(req.files.image);
+		if (Request.files && Request.files.image) {
+			requestData.image = await app.upload_pic_with_await(Request.files.image);
 		} else { 
 			throw new ApiError('image field is required',422);
 		}
@@ -72,16 +72,16 @@ module.exports = {
 			user_id: Request.body.user_id
 		};
 		const requestData = await apis.vaildation(required, nonRequired);
-		const product_info = await DB.find('prodcuts', 'first', {
+		const product_info = await DB.find('products', 'first', {
 			conditions: {
-				user_id,
+				user_id: requestData.user_id,
 				id:requestData.product_id
 			}
 		})
 		if (!product_info) throw new ApiError('Invaild Product id', 400);
 		requestData.id= requestData.product_id
-		if (req.files && req.files.image) {
-			requestData.profile = await app.upload_pic_with_await(req.files.image);
+		if (Request.files && Request.files.image) {
+			requestData.image = await app.upload_pic_with_await(Request.files.image);
 		}
 		requestData.id = await DB.save('products', requestData);
 		return {
@@ -95,9 +95,9 @@ module.exports = {
 			user_id: Request.body.user_id
 		};
 		const requestData = await apis.vaildation(required, {});
-		const product_info = await DB.find('prodcuts', 'first', {
+		const product_info = await DB.find('products', 'first', {
 			conditions: {
-				user_id,
+				user_id: requestData.product_id,
 				id:requestData.product_id
 			}
 		})
@@ -126,7 +126,8 @@ module.exports = {
 		const updateOrderStatus = {
 			id: order_id
 		};
-		if(order_id === 1){
+		const data = {}
+		if (order_id === 1) {
 			const {latitude, longitude} = Request.body.userInfo;
 			const driver = findDriver(latitude, longitude);
 			if(!driver) throw new ApiError('No Driver Found', 400);
@@ -137,14 +138,18 @@ module.exports = {
 				id:driver.id,
 				is_free:0
 			});
-		}else{
+			data.driver_info = driver;
+			data.order_info = order_info;
+
+		} else {
 			updateOrderStatus.order_status = 2;
 			message = "Order Rejeted";
 		}
 		DB.save('orders', updateOrderStatus);
+		
 		return {
 			message,
-			data: 
+			data
 		};
 	}
 };

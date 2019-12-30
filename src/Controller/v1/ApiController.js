@@ -133,9 +133,10 @@ class ApiController {
 				'authorization_key',
 				'dob',
 				'address',
-				'start_time_call',
-				'end_time_call',
-				'centre'
+				'user_type',
+				'licence',
+				'latitude',
+				'longitude'
 			]
 		});
 	}
