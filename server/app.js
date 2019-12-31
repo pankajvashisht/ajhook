@@ -53,7 +53,7 @@ app.use(function(req, res, next) {
 app.use('/admins', adminRouter);
 app.use('/apis/v1/', apiRouter);
 app.use('/users', users);
-app.use('/', index)
+app.use('/welcome', index)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
