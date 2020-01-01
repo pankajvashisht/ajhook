@@ -44,6 +44,8 @@ export const addUser = (data) => {
 	form.append('phone', data.phone);
 	form.append('email', data.email);
 	form.append('user_type', data.user_type);
+	form.append('profile', data.profile);
+	form.append('status', 1);
 	form.append('card_informations', "null");
 	return axios.post(`/users`, form);
 };

@@ -90,7 +90,7 @@ return(
             <div className="form-side">
               
               <NavLink to={`/`} className="white">
-                <img style={{paddingLeft: "41%"}} height="100px" src="/assets/img/logo.jpeg" />
+                <img style={{paddingLeft: "33%"}} height="160px" src="/assets/img/logo.jpeg" />
                 {/* <span className="logo-single" /> */}
               </NavLink>
               <CardTitle className="mb-4">

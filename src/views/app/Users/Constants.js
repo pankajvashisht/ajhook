@@ -22,6 +22,7 @@ export const initialState = {
     address: '',
     phone: '',
     user_type: 1,
+    profile:'',
     card_informations:null,
 };
 

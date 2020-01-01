@@ -131,7 +131,18 @@ const AddDriver = React.memo(() => {
 											/>
 										</FormGroup>
 									</Colxx>
-									
+									<Colxx sm={12}>
+										<FormGroup>
+											<Label for="examplePasswordGrid">Profile</Label>
+											<Input
+												type="file"
+												required={true}
+												onChange={({ target }) => handleInput('profile', target.files[0])}
+												name="profile"
+												placeholder=""
+											/>
+										</FormGroup>
+									</Colxx>
 								</FormGroup>
 
 								<Button disabled={loading} type="submit" className={`btn-shadow btn-multiple-state ${loading ? "show-spinner" : ""}`} color="primary">

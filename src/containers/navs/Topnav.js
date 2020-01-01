@@ -229,7 +229,7 @@ class TopNav extends Component {
           </NavLink>
         </div>
         <a className="navbar-logo">
-          <img height="50px" src="/assets/img/logo.jpeg" />
+          <img height="50px" style={{ borderRadius: "50%"}} src="/assets/img/logo.jpeg" />
           <span className="logo-mobile d-block d-xs-none" />
         </a>
 

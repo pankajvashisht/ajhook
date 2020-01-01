@@ -131,7 +131,32 @@ const AddShop = React.memo(() => {
 											/>
 										</FormGroup>
 									</Colxx>
-									
+                                   
+									<Colxx sm={6}>
+										<FormGroup>
+											<Label for="examplePasswordGrid">Expiration date</Label>
+											<Input
+												type="date"
+												required={true}
+												value={shopForm.dob}
+												onChange={({ target }) => handleInput('dob', target.value)}
+												name="expiration_date"
+												placeholder="Expiration Date"
+											/>
+										</FormGroup>
+									</Colxx>
+                                     <Colxx sm={6}>
+										<FormGroup>
+											<Label for="examplePasswordGrid">Profile</Label>
+											<Input
+												type="file"
+												required={true}
+												onChange={({ target }) => handleInput('profile', target.files[0])}
+												name="profile"
+												placeholder=""
+											/>
+										</FormGroup>
+									</Colxx>
 								</FormGroup>
 
 								<Button disabled={loading} type="submit" className={`btn-shadow btn-multiple-state ${loading ? "show-spinner" : ""}`} color="primary">

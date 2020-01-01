@@ -78,12 +78,6 @@ const data = [
 		]
 	},
 	{
-		id: 'Push Notification',
-		icon: 'simple-icon-bell',
-		label: 'Push Notification',
-		to: '/push'
-	},
-	{
 		id: 'App Informations',
 		icon: 'iconsminds-monitor---phone',
 		label: 'App Informations',

@@ -45,7 +45,7 @@ const DefaultDashboard = React.memo((props) => {
 								<GradientWithRadialProgressCard
 									icon="iconsminds-male"
 									title={`${dashBoardData.total_users} Users`}
-									detail="Register Users"
+									detail=""
 								/>
 							</NavLink>
 						</Colxx>
@@ -54,7 +54,7 @@ const DefaultDashboard = React.memo((props) => {
 								<GradientWithRadialProgressCard
 									icon="iconsminds-scooter"
 									title={`${dashBoardData.total_drivers} Drivers`}
-									detail={`Drivers`}
+									detail={``}
 								/>
 							</NavLink>
 						</Colxx>
@@ -63,7 +63,7 @@ const DefaultDashboard = React.memo((props) => {
 								<GradientWithRadialProgressCard
 									icon="iconsminds-shop-2"
 									title={`${dashBoardData.total_shops} Shops`}
-									detail="Total Shops"
+									detail=""
 								/>
 							</NavLink>
 						</Colxx>
@@ -76,7 +76,7 @@ const DefaultDashboard = React.memo((props) => {
 								<GradientWithRadialProgressCard
 									icon="simple-icon-emotsmile"
 									title={`${dashBoardData.total_orders} Orders`}
-									detail="New Orders"
+									detail=""
 								/>
 							</NavLink>
 						</Colxx>

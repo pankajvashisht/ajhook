@@ -5586,7 +5586,7 @@ input:-webkit-autofill {
 
 .progress-banner {
   height: 200px;
-  background-image: linear-gradient(to right top, $gradient-color-2, $gradient-color-3, $gradient-color-1);
+  background-color: $theme-color-1;
   transition: 0.5s;
   background-size: 200% auto;
   cursor: pointer;
