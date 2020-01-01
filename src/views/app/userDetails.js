@@ -25,10 +25,8 @@ const UserDetails = (props) => {
 				<div>
 					<b> Address </b> : {userDetails.address}
 				</div>
-				<hr />
-				<div>
-					<b> DOB </b> : {userDetails.dob}
-				</div>
+				
+				
 				<hr />
 			</CardBody>
 		</Fragment>

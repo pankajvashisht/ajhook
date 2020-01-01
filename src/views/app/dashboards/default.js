@@ -33,7 +33,7 @@ const DefaultDashboard = React.memo((props) => {
 		<Fragment>
 			<Row>
 				<Colxx xxs="12">
-					<h1>Dashbaord</h1>
+					<h1>Dashboard</h1>
 					<Separator className="mb-5" />
 				</Colxx>
 			</Row>
