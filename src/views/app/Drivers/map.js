@@ -115,7 +115,7 @@ const DriverMap = React.memo((props) => {
                         <MapWithAMarker
                         lat={post.latitude}
                         lng={post.longitude}
-                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO8MfadmlotuuHC8wmjwL_46I5QAMIiRU&v=3.exp&libraries=geometry,drawing,places"
+                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5-nBPRTKoIFzoVXfALW-oPnBlCLQTTIY&v=3.exp&libraries=geometry,drawing,places"
                         loadingElement={<div className="map-item" />}
                         containerElement={<div className="map-item" />}
                         mapElement={<div className="map-item" />}/>
