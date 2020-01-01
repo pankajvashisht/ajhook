@@ -8,7 +8,7 @@ import {
   DropdownMenu,
 } from "reactstrap";
 
-import { NavLink,Redirect } from "react-router-dom";
+import { NavLink,Redirect,Link} from "react-router-dom";
 import { connect } from "react-redux";
 import {
   setContainerClassnames,
@@ -36,6 +36,7 @@ class TopNav extends Component {
       isInFullScreen: false,
       searchKeyword: "",
       redirect:false,
+      profile: false,
       loginInfo:{
         name:"Admin Admin",
       }
@@ -178,7 +179,7 @@ class TopNav extends Component {
 
   handleLogout = () => {
     localStorage.clear();
-    this.setState({redirect:true});
+    this.setState({redirect:true,profile:false});
   };
 
   menuButtonClick = (e, menuClickCount, containerClassnames) => {
@@ -227,8 +228,8 @@ class TopNav extends Component {
             <MobileMenuIcon />
           </NavLink>
         </div>
-        <a className="navbar-logo" href="/">
-          <span className="logo d-none d-xs-block" />
+        <a className="navbar-logo">
+          <img height="50px" src="/assets/img/logo.jpeg" />
           <span className="logo-mobile d-block d-xs-none" />
         </a>
 
@@ -253,14 +254,17 @@ class TopNav extends Component {
           <div className="user d-inline-block">
             <UncontrolledDropdown className="dropdown-menu-right">
               <DropdownToggle className="p-0" color="empty">
-                <span className="name mr-1">{ this.state.loginInfo.name }</span>
+                <span className="name mr-1">{ this.state.loginInfo.first_name } { this.state.loginInfo.last_name }</span>
                 <span>
-                  <img alt="Profile" src="/assets/img/profile-pic-l.jpg" />
+                  <img alt="Profile" src={this.state.loginInfo.profile ? this.state.loginInfo.profile:'/assets/img/profile-pic.jpg'} />
                 </span>
               </DropdownToggle>
               <DropdownMenu className="mt-3" right>
-                <DropdownItem>Account</DropdownItem>
-                
+                <Link to="/profile">
+                <DropdownItem path="/profile">
+                   Profile 
+                </DropdownItem>
+                </Link>
                 <DropdownItem divider />
                 <DropdownItem onClick={() => this.handleLogout()}>
                   Sign out

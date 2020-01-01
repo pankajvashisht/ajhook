@@ -34,16 +34,30 @@ export const appInfo = () => {
 export const updateAppInfo = data => {
 	return axios.put(`/appInfo`, data);
 };
-export const addClass = (data) => {
+export const addUser = (data) => {
 	const form = new FormData();
 	form.append('name', data.name);
-	form.append('location', data.location);
+	form.append('address', data.address);
 	form.append('latitude', data.latitude);
 	form.append('longitude', data.longitude);
-	form.append('description', data.description);
-	form.append('tag_id', data.tag_id);
-	form.append('price', data.price);
-	return axios.post(`/classes`, form);
+	form.append('password', data.password);
+	form.append('phone', data.phone);
+	form.append('email', data.email);
+	form.append('user_type', data.user_type);
+	form.append('card_informations', "null");
+	return axios.post(`/users`, form);
+};
+
+export const updateProfile = (data) => {
+	const form = new FormData();
+	form.append('first_name', data.first_name);
+	form.append('last_name', data.last_name);
+	form.append('password', data.password);
+	form.append('email', data.email);
+	form.append('token', data.token);
+	form.append('profile', data.image);
+	form.append('id', data.id);
+	return axios.post(`/admin-profile`, form);
 };
 
 export const updateUser = (data) => {

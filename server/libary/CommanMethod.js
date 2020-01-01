@@ -172,8 +172,7 @@ module.exports = {
 		return this.createHash(token);
 	},
 	ImageUrl(name, folder = 'uploads') {
-		const ip = 'localhost';
-		return 'http://' + ip + '/' + folder + '/' + name;
+		return appURL + folder + '/' + name;
 	},
 	randomNumber() {
 		return Math.floor(1000 + Math.random() * 9000);

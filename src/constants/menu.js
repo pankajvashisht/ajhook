@@ -16,6 +16,11 @@ const data = [
 				label: 'Users',
 				to: '/users'
 			},
+			{
+				icon: 'iconsminds-add-user',
+				label: 'Add User',
+				to: '/add-user'
+			},
 		]
 	},
 	{
@@ -28,17 +33,22 @@ const data = [
 				icon: 'iconsminds-shop',
 				label: 'Shops',
 				to: '/shops'
-			}
+			},
+			{
+				icon: 'iconsminds-add-basket',
+				label: 'Add Shop',
+				to: '/add-shop'
+			},
 		]
 	},
 	{
 		id: 'Driver',
-		icon: 'iconsminds-bicycle',
+		icon: 'iconsminds-scooter',
 		label: 'Drivers',
 		to: '/drivers',
 		subs: [
 			{
-				icon: 'iconsminds-bicycle',
+				icon: 'iconsminds-scooter',
 				label: 'Drivers List',
 				to: '/drivers'
 			},
@@ -46,17 +56,22 @@ const data = [
 				icon: 'simple-icon-location-pin',
 				label: 'Map View',
 				to: '/maps-drivers'
-			}
+			},
+			{
+				icon: 'iconsminds-add',
+				label: 'Add Driver',
+				to: '/add-driver'
+			},
 		]
 	},
 	{
 		id: 'Orders',
-		icon: 'simple-icon-location-pin',
+		icon: 'simple-icon-emotsmile',
 		label: 'Orders',
 		to: '/orders',
 		subs: [
 			{
-				icon: 'simple-icon-location-pin',
+				icon: 'simple-icon-emotsmile',
 				label: 'Orders',
 				to: '/orders'
 			}

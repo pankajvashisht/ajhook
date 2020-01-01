@@ -3,7 +3,6 @@ import { injectIntl } from 'react-intl';
 import { Row } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Colxx, Separator } from '../../../components/common/CustomBootstrap';
-import Breadcrumb from '../../../containers/navs/Breadcrumb';
 import GradientWithRadialProgressCard from '../../../components/cards/GradientWithRadialProgressCard';
 import { dashBoard } from '../../../Apis/admin';
 import { NotificationManager } from '../../../components/common/react-notifications';
@@ -53,9 +52,9 @@ const DefaultDashboard = React.memo((props) => {
 						<Colxx lg="4" xl="4" className="mb-4">
 							<NavLink to="/drivers">
 								<GradientWithRadialProgressCard
-									icon="iconsminds-bicycle"
-									title={`${dashBoardData.total_drivers} Total Drivers`}
-									detail={`Total Drivers`}
+									icon="iconsminds-scooter"
+									title={`${dashBoardData.total_drivers} Drivers`}
+									detail={`Drivers`}
 								/>
 							</NavLink>
 						</Colxx>
@@ -76,7 +75,7 @@ const DefaultDashboard = React.memo((props) => {
 							<NavLink to="/orders">
 								<GradientWithRadialProgressCard
 									icon="simple-icon-emotsmile"
-									title={`${dashBoardData.total_orders} Total Orders`}
+									title={`${dashBoardData.total_orders} Orders`}
 									detail="New Orders"
 								/>
 							</NavLink>

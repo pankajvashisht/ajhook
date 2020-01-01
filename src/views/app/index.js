@@ -15,7 +15,10 @@ const Orders  = React.lazy(() => import(/* webpackChunkName: "order" */ './Order
 const DriverDetails = React.lazy(() => import(/* webpackChunkName: "driverDetails" */ './Drivers/driverDetails'));
 const DriverMap = React.lazy(() => import(/* webpackChunkName: "driver-map" */ './Drivers/map'));
 const AppInformation = React.lazy(() => import(/* webpackChunkName: "app-info" */ './AppInformations'));
-
+const AddShop = React.lazy(() => import(/* webpackChunkName: "add-shop" */ './shops/AddShop'));
+const AddDriver = React.lazy(() => import(/* webpackChunkName: "add-shop" */ './Drivers/AddDriver'));
+const AddUser = React.lazy(() => import(/* webpackChunkName: "add-shop" */ './Users/AddUser'));
+const Profile = React.lazy(() => import(/* webpackChunkName: "add-shop" */ './profile'));
 class App extends Component {
 	render() {
 		return (
@@ -28,12 +31,16 @@ class App extends Component {
 							<Route path={`/users`} render={(props) => <Users {...props} />} />
 							<Route path={`/shops`} render={(props) => <Shops {...props} />} />
 							<Route path={`/shop-details`} render={(props) => <ShopDetails {...props} />} />
-							<Route path={`/drivers`} render={(props) => <Drivers {...props} />} />
+							<Route path={`/drivers`} component={Drivers} />} />
 							<Route path={`/user-details`} render={(props) => <UserDetails {...props} />} />
 							<Route path={`/driver-details`} render={(props) => <DriverDetails {...props} />} />
 							<Route path={`/maps-drivers`} render={(props) => <DriverMap {...props} />} />
 							<Route path={`/push`} render={(props) => <Push {...props} />} />
 							<Route path={`/orders`} render={(props) => <Orders {...props} />} />
+							<Route path={`/add-shop`} component={AddShop} />} />
+							<Route path={`/add-driver`} component={AddDriver} />} />
+							<Route path={`/add-user`} component={AddUser} />} />
+							<Route path={`/profile`} component={Profile} />} />
 							<Route path={`/app-information`} render={(props) => <AppInformation {...props} />} />
 							<Redirect to="/error" />
 						</Switch>

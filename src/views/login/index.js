@@ -88,8 +88,10 @@ return(
               </p>
             </div>
             <div className="form-side">
+              
               <NavLink to={`/`} className="white">
-                <span className="logo-single" />
+                <img style={{paddingLeft: "41%"}} height="100px" src="/assets/img/logo.jpeg" />
+                {/* <span className="logo-single" /> */}
               </NavLink>
               <CardTitle className="mb-4">
                 <IntlMessages id="user.login-title" />
@@ -134,9 +136,9 @@ return(
                       )}
                     </FormGroup>
                     <div className="d-flex justify-content-between align-items-center">
-                      <NavLink to={`/user/forgot-password`}>
+                      {/* <NavLink to={`/user/forgot-password`}>
                         <IntlMessages id="user.forgot-password-question" />
-                      </NavLink>
+                      </NavLink> */}
                       <Button
                         color="primary"
                         className={`btn-shadow btn-multiple-state ${loading ? "show-spinner" : ""}`}

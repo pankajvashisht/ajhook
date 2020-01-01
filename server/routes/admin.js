@@ -29,6 +29,7 @@ router
 	.delete(response(admin.deleteData));
 router.get('/products/:offset([0-9]+)?/:limit([0-9]+)?', response(admin.getProducts));
 router.get('/orders/:offset([0-9]+)?/:limit([0-9]+)?', response(admin.getOrders));	
+router.post('/admin-profile', response(admin.adminProfile));
 
 router.route('/appInfo/').get(response(admin.appInfo)).put(response(admin.updateData));
 
