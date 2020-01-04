@@ -116,7 +116,7 @@ class ApiController {
 	}
 
 	async userDetails(id) {
-		return await DB.find('users', 'first', {
+		const result = await DB.find('users', 'first', {
 			conditions: {
 				id: id
 			},
@@ -136,9 +136,14 @@ class ApiController {
 				'user_type',
 				'licence',
 				'latitude',
-				'longitude'
+				'longitude',
+				'card_informations'
 			]
 		});
+		if (result.card_informations) { 
+			result.card_informations = JSON.parse(result.card_informations);
+		}
+		return result;
 	}
 }
 
