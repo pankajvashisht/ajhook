@@ -74,7 +74,7 @@ class adminController extends ApiController {
 		const total = `select count(*) as total from users ${conditions}`;
 		const result = {
 			pagination: await super.Paginations(total, offset, limit),
-			result: app.addUrl(await DB.first(query), ['profile','licence'])
+			result: app.addUrl(await DB.first(query), [ 'profile', 'licence' ])
 		};
 		return result;
 	}
@@ -92,7 +92,7 @@ class adminController extends ApiController {
 		const total = `select count(*) as total from users ${conditions}`;
 		const result = {
 			pagination: await super.Paginations(total, offset, limit),
-			result: app.addUrl(await DB.first(query), ['profile','licence'])
+			result: app.addUrl(await DB.first(query), [ 'profile', 'licence' ])
 		};
 		return result;
 	}
@@ -112,7 +112,7 @@ class adminController extends ApiController {
 		const total = `select count(*) as total from products ${conditions}`;
 		const result = {
 			pagination: await super.Paginations(total, offset, limit),
-			result: app.addUrl(await DB.first(query),'image')
+			result: app.addUrl(await DB.first(query), 'image')
 		};
 		return result;
 	}
@@ -123,7 +123,7 @@ class adminController extends ApiController {
 		const orderStatus = Request.query.order_status || 2;
 		offset = (offset - 1) * limit;
 		let conditions = `where order_status = ${orderStatus}`;
-		
+
 		const query = `select * from orders ${conditions} order by id desc limit ${offset}, ${limit}`;
 		const total = `select count(*) as total from orders ${conditions}`;
 		const result = {
@@ -133,21 +133,27 @@ class adminController extends ApiController {
 		return result;
 	}
 
-
 	async addUser(Request) {
 		const { body } = Request;
-		if(body.email){
+		if (body.email) {
 			const query = `select * from users where email = '${body.email}'`;
 			const email = await DB.first(query);
-			if(email.length > 0){
+			if (email.length > 0) {
 				throw new ApiError('Email Already registered Please use another');
 			}
 		}
-		if(body.phone){
+		if (body.phone) {
 			const query1 = `select * from users where email = '${body.phone}'`;
 			const phone = await DB.first(query1);
-			if(phone.length > 0){
+			if (phone.length > 0) {
 				throw new ApiError('Phone Already registered Please use another');
+			}
+		}
+		if (body.dob) {
+			const date = Math.round(new Date(body.dob).getTime() / 1000, 0);
+			const currentDate = Math.round(new Date().getTime() / 1000, 0) - 31556926 * 21;
+			if (date > currentDate) {
+				throw new ApiError('DOB should be 21 and more');
 			}
 		}
 		delete body.profile;
@@ -161,22 +167,22 @@ class adminController extends ApiController {
 		return await DB.save('users', body);
 	}
 
-	async adminProfile(Request){
+	async adminProfile(Request) {
 		const { body } = Request;
-		if(body.password === 'empty' || body.password === ''){
+		if (body.password === 'empty' || body.password === '') {
 			delete body.password;
-		}else{
-			 body.password = app.createHash(body.password);
+		} else {
+			body.password = app.createHash(body.password);
 		}
 		delete body.profile;
 		if (Request.files && Request.files.profile) {
 			body.profile = await app.upload_pic_with_await(Request.files.profile);
 		}
-		const admin_id =  await DB.save('admins', body);
-		const admin_info =  await DB.first(`select * from admins where id = ${admin_id} limit 1`);
-		if(admin_info[0].profile.length > 0){
+		const admin_id = await DB.save('admins', body);
+		const admin_info = await DB.first(`select * from admins where id = ${admin_id} limit 1`);
+		if (admin_info[0].profile.length > 0) {
 			admin_info[0].profile = app.ImageUrl(admin_info[0].profile);
-		}	
+		}
 		return admin_info[0];
 	}
 

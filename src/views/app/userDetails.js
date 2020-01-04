@@ -19,14 +19,18 @@ const UserDetails = (props) => {
 				</div>
 				<hr />
 				<div>
-				<b> Phone </b> : {userDetails.phone_code}{userDetails.phone}
+					<b> Phone </b> : {userDetails.phone_code}
+					{userDetails.phone}
 				</div>
 				<hr />
 				<div>
 					<b> Address </b> : {userDetails.address}
 				</div>
-				
-				
+				<hr />
+				<div>
+					<b> DOB </b> : {userDetails.dob}
+				</div>
+
 				<hr />
 			</CardBody>
 		</Fragment>

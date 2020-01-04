@@ -19,10 +19,10 @@ export const shops = (page = 1, limit = 10, q = undefined) => {
 export const drivers = (page = 1, limit = 10, q = undefined) => {
 	return axios.get(`/drivers/${page}/${limit}?q=${q}`);
 };
-export const products = (page = 1, limit = 10, shop_id ,q = undefined) => {
+export const products = (page = 1, limit = 10, shop_id, q = undefined) => {
 	return axios.get(`/products/${page}/${limit}?q=${q}&shop_id=${shop_id}`);
 };
-export const orders = (page = 1, limit = 10,q = undefined) => {
+export const orders = (page = 1, limit = 10, q = undefined) => {
 	return axios.get(`/orders/${page}/${limit}?q=${q}`);
 };
 export const sendPush = (data) => {
@@ -31,7 +31,7 @@ export const sendPush = (data) => {
 export const appInfo = () => {
 	return axios.get(`/appInfo`);
 };
-export const updateAppInfo = data => {
+export const updateAppInfo = (data) => {
 	return axios.put(`/appInfo`, data);
 };
 export const addUser = (data) => {
@@ -47,7 +47,8 @@ export const addUser = (data) => {
 	form.append('profile', data.profile);
 	form.append('status', 1);
 	form.append('licence', data.licence);
-	form.append('card_informations', "null");
+	form.append('dob', data.dob);
+	form.append('card_informations', 'null');
 	return axios.post(`/users`, form);
 };
 

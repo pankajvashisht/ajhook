@@ -6,7 +6,6 @@ import { addUser } from '../../../Apis/admin';
 import Autocomplete from 'react-google-autocomplete';
 import { initialState } from './Constants';
 import { NotificationManager } from '../../../components/common/react-notifications';
-
 const AddUser = React.memo(() => {
 	const reducer = (form, action) => {
 		switch (action.key) {
@@ -44,7 +43,7 @@ const AddUser = React.memo(() => {
 	const handleInput = (key, value) => {
 		dispatch({ key, value });
 	};
-	
+
 	if (redirect) {
 		return <Redirect to="/users" />;
 	}
@@ -131,7 +130,7 @@ const AddUser = React.memo(() => {
 											/>
 										</FormGroup>
 									</Colxx>
-									<Colxx sm={12}>
+									<Colxx sm={6}>
 										<FormGroup>
 											<Label for="examplePasswordGrid">Profile</Label>
 											<Input
@@ -143,9 +142,27 @@ const AddUser = React.memo(() => {
 											/>
 										</FormGroup>
 									</Colxx>
+									<Colxx sm={6}>
+										<FormGroup>
+											<Label for="examplePasswordGrid">DOB</Label>
+											<Input
+												type="date"
+												required={true}
+												value={userForm.dob}
+												onChange={({ target }) => handleInput('dob', target.value)}
+												name="dob"
+												placeholder="DOB"
+											/>
+										</FormGroup>
+									</Colxx>
 								</FormGroup>
 
-								<Button disabled={loading} type="submit" className={`btn-shadow btn-multiple-state ${loading ? "show-spinner" : ""}`} color="primary">
+								<Button
+									disabled={loading}
+									type="submit"
+									className={`btn-shadow btn-multiple-state ${loading ? 'show-spinner' : ''}`}
+									color="primary"
+								>
 									Save
 								</Button>
 							</Form>
