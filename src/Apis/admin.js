@@ -46,6 +46,7 @@ export const addUser = (data) => {
 	form.append('user_type', data.user_type);
 	form.append('profile', data.profile);
 	form.append('status', 1);
+	form.append('licence', data.licence);
 	form.append('card_informations', "null");
 	return axios.post(`/users`, form);
 };

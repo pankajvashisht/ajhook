@@ -24,6 +24,7 @@ export const initialState = {
     user_type: 2,
     profile:'',
     dob:'',
+    licence:'',
     card_informations:null
 };
 

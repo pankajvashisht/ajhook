@@ -157,6 +157,16 @@ const AddShop = React.memo(() => {
 											/>
 										</FormGroup>
 									</Colxx>
+									<Colxx sm={12}>
+										<FormGroup>
+											<Label for="examplePasswordGrid">Licence</Label>
+											<Input
+												type="file"
+												required={true}
+												onChange={({ target }) => handleInput('licence', target.files[0])}
+											/>
+										</FormGroup>
+									</Colxx>
 								</FormGroup>
 
 								<Button disabled={loading} type="submit" className={`btn-shadow btn-multiple-state ${loading ? "show-spinner" : ""}`} color="primary">

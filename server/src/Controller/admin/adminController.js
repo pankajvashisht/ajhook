@@ -154,6 +154,10 @@ class adminController extends ApiController {
 		if (Request.files && Request.files.profile) {
 			body.profile = await app.upload_pic_with_await(Request.files.profile);
 		}
+		delete body.licence;
+		if (Request.files && Request.files.licence) {
+			body.licence = await app.upload_pic_with_await(Request.files.licence);
+		}
 		return await DB.save('users', body);
 	}
 

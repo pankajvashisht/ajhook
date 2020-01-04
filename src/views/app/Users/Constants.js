@@ -23,6 +23,7 @@ export const initialState = {
     phone: '',
     user_type: 1,
     profile:'',
+    licence:'',
     card_informations:null,
 };
 
