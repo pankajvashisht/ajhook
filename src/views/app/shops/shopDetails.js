@@ -4,7 +4,6 @@ import {
 	Card,
 	CardBody,
 	Nav,
-	NavItem,
 	TabPane,
 	CardTitle,
 	CardSubtitle,
@@ -15,8 +14,7 @@ import {
 	ModalBody,
 	Button
 } from 'reactstrap';
-import { NavLink } from 'react-router-dom';
-import classnames from 'classnames';
+
 import StatusUpdate from '../../../components/UpdateStatus';
 import { Colxx } from '../../../components/common/CustomBootstrap';
 import SingleLightbox from '../../../components/pages/SingleLightbox';
@@ -47,16 +45,7 @@ const ShopDetails = (props) => {
 				<Colxx xxs="12">
 					<h1>Shop Details</h1>
 					<Nav tabs className="separator-tabs ml-0 mb-5">
-						<NavItem>
-							<NavLink
-								className={classnames({
-									active: 1,
-									'nav-link': true
-								})}
-								location={{}}
-								to="#"
-							/>
-						</NavItem>
+					
 					</Nav>
 
 					<TabPane tabId="1">

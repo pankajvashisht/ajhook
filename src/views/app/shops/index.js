@@ -140,7 +140,7 @@ const Shops = React.memo((props) => {
 									</div>
 								</div>
 								<div className="custom-control custom-checkbox pl-1 align-self-center pr-4">
-									<DeleteData table="users" data={post.id} ondelete={() => DeleteDataLocal(key)}>
+									<DeleteData table="users" view="Shop" data={post.id} ondelete={() => DeleteDataLocal(key)}>
 										Delete
 									</DeleteData>
 								</div>

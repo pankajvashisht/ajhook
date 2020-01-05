@@ -3,18 +3,18 @@ import PropTypes from "prop-types";
 import {Button} from "reactstrap";
 import swal from "sweetalert";
 import { deleteUser } from "../Apis/admin";
-const DeleteData = ({ classes, children, table, data,ondelete }) => {
+const DeleteData = ({ classes, children, table, data,ondelete, view = 'User' }) => {
   const deleted = ( ) => {
     swal({
       title: `Are you sure want delete?`,
-      text: `Are you sure want to delete ` + table,
+      text: `Are you sure want to delete ` + view,
       icon: "warning",
       buttons: true,
       dangerMode: true
     }).then(willDelete => {
       if (willDelete) {
         deleteUser({table:table,id:data}).then(data => {
-          swal(table+" have been deleted", {
+          swal(view+" have been deleted", {
             icon: "success"
           });
           ondelete(data);

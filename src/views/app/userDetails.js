@@ -1,12 +1,12 @@
 import React, { Fragment, useState } from 'react';
-import { Card, CardHeader, CardBody, CardTitle } from 'reactstrap';
+import { Card, CardHeader, CardBody } from 'reactstrap';
 const UserDetails = (props) => {
 	const [ userDetails ] = useState({ ...props.location.state.post });
 	return (
 		<Fragment>
 			<Card>
 				<CardHeader>
-					<CardTitle tabIndex="10"> User Details </CardTitle>
+					<h1 style={{    paddingTop: "31px"}}> User Details </h1>
 				</CardHeader>
 			</Card>
 			<CardBody>
