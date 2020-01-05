@@ -4,10 +4,8 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect
 } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
-import {checkAuth} from  './utils/helper';
 import AppLocale from './lang';
 import ColorSwitcher from './components/common/ColorSwitcher';
 import NotificationContainer from './components/common/react-notifications/NotificationContainer';
@@ -15,32 +13,9 @@ import { isMultiColorActive } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
 
 
-const ViewApp = React.lazy(() =>
-  import(/* webpackChunkName: "views-app" */ './views/app')
+const Admin = React.lazy(() =>
+  import(/* webpackChunkName: "views-app" */ './views')
 );
-const Login = React.lazy(() =>
-  import(/* webpackChunkName: "views-user" */ './views/login')
-);
-
-const AuthRoute = ({ component: Component, authUser, ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={props =>
-        checkAuth('LoginUser') ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{
-              pathname: '/login',
-              state: { from: props.location }
-            }}
-          />
-        )
-      }
-    />
-  );
-}
 
 class App extends Component {
   constructor(props) {
@@ -57,7 +32,6 @@ class App extends Component {
 
   render() {
     const { locale } = this.props;
-    const loginUser = false;
     const currentAppLocale = AppLocale[locale];
 
     return (
@@ -70,18 +44,12 @@ class App extends Component {
             <NotificationContainer />
             {isMultiColorActive && <ColorSwitcher />}
             <Suspense fallback={<div className="loading" />}>
-              <Router basename="admin">
+              <Router>
                 <Switch>
                 <Route
-                    expect
-                    path="/login"
-                    component={Login}
+                    path="/admin"
+                    component={Admin}
                   />
-                  { <AuthRoute
-                    path="/"
-                    authUser={loginUser}
-                    component={ViewApp}
-                  /> }
                 </Switch>
               </Router>
             </Suspense>
