@@ -16,6 +16,9 @@ import { getDirection } from './helpers/Utils';
 const Admin = React.lazy(() =>
   import(/* webpackChunkName: "views-app" */ './views')
 );
+const Web = React.lazy(() =>
+  import(/* webpackChunkName: "web" */ './views/web')
+);
 
 class App extends Component {
   constructor(props) {
@@ -49,6 +52,10 @@ class App extends Component {
                 <Route
                     path="/admin"
                     component={Admin}
+                  />
+                  <Route
+                    path="/"
+                    component={Web}
                   />
                 </Switch>
               </Router>
