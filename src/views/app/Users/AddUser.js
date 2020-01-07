@@ -130,19 +130,7 @@ const AddUser = React.memo(() => {
 											/>
 										</FormGroup>
 									</Colxx>
-									<Colxx sm={6}>
-										<FormGroup>
-											<Label for="examplePasswordGrid">Profile</Label>
-											<Input
-												type="file"
-												required={true}
-												onChange={({ target }) => handleInput('profile', target.files[0])}
-												name="profile"
-												placeholder=""
-											/>
-										</FormGroup>
-									</Colxx>
-									<Colxx sm={6}>
+									<Colxx sm={12}>
 										<FormGroup>
 											<Label for="examplePasswordGrid">DOB</Label>
 											<Input
