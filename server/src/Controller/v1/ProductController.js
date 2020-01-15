@@ -14,7 +14,7 @@ module.exports = {
     offset = (offset - 1) * limit;
     const condition = {
       conditions: {
-        status: 1,
+        'products.status': 1,
         user_id,
       },
       join: ['users on (users.id = products.user_id)'],
