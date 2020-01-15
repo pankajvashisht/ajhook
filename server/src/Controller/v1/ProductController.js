@@ -74,7 +74,7 @@ module.exports = {
     const product_id = Request.params.product_id;
     const product_info = await DB.find('products', 'first', {
       conditions: {
-        id: product_id,
+        "products.id": product_id,
       },
       join: ['users on (users.id = products.user_id)'],
       fields: [
