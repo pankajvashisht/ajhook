@@ -110,12 +110,14 @@ module.exports = {
 		const user_type = Request.body.userInfo.user_type;
 		let offset = Request.params.offset || 1;
 		const limit = Request.query.limit || 10;
+		const order_status = Request.query.limit || 1;
 		offset = (offset - 1) * limit;
 		const conditions = {};
 		if (user_type === 1) {
 			conditions['user_id'] = user_id;
 		} else if (user_type === 2) {
 			conditions['shop_id'] = user_id;
+			conditions['order_status'] = order_status;
 		} else {
 			conditions['driver_id'] = user_id;
 		}
