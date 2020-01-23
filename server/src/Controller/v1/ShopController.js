@@ -110,7 +110,7 @@ module.exports = {
 		const user_type = Request.body.userInfo.user_type;
 		let offset = Request.params.offset || 1;
 		const limit = Request.query.limit || 10;
-		const order_status = Request.query.limit || 1;
+		const order_status = Request.query.order_status || 1;
 		offset = (offset - 1) * limit;
 		const conditions = {};
 		if (user_type === 1) {
