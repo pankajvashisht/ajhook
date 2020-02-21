@@ -115,6 +115,7 @@ module.exports = {
 		const conditions = {};
 		if (user_type === 1) {
 			conditions['user_id'] = user_id;
+			conditions['order_status'] = order_status;
 		} else if (user_type === 2) {
 			conditions['shop_id'] = user_id;
 			conditions['order_status'] = order_status;
@@ -123,7 +124,7 @@ module.exports = {
 		}
 		const condition = {
 			conditions,
-			join: [ 'users on (users.id =  orders.user_id)' ],
+			join: [ 'users on (users.id =  orders.user_id)' , 'users as shops on (shops.id = orders.shop_id)'],
 			limit: [ offset, limit ],
 			fields: [
 				'orders.*',
@@ -134,7 +135,15 @@ module.exports = {
 				'users.address',
 				'users.latitude',
 				'users.longitude',
-				'users.profile'
+				'users.profile',
+				'shops.name as shop_name',
+				'shops.email as shop_email',
+				'shops.phone as shop_phone',
+				'shops.phone_code as shop_phone_code',
+				'shops.address as shop_address',
+				'shops.latitude as shop_lat',
+				'shops.longitude as shop_lng',
+				'shops.profile as shop_profile'
 			],
 			orderBy: [ 'orders.id desc' ]
 		};
@@ -152,7 +161,7 @@ module.exports = {
 			message: 'My orders',
 			data: {
 				pagination: await apis.Paginations('orders', condition, offset, limit),
-				result: app.addUrl(final, 'profile')
+				result: app.addUrl(final, ['profile', 'shop_profile'])
 			}
 		};
 	}
