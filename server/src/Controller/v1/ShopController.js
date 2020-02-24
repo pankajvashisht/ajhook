@@ -112,19 +112,19 @@ module.exports = {
 		const limit = Request.query.limit || 10;
 		const order_status = Request.query.order_status || 1;
 		offset = (offset - 1) * limit;
-		const conditions = {};
+		const conditions = {
+			order_status
+		};
 		if (user_type === 1) {
 			conditions['user_id'] = user_id;
-			conditions['order_status'] = order_status;
 		} else if (user_type === 2) {
 			conditions['shop_id'] = user_id;
-			conditions['order_status'] = order_status;
 		} else {
 			conditions['driver_id'] = user_id;
 		}
 		const condition = {
 			conditions,
-			join: [ 'users on (users.id =  orders.user_id)' , 'users as shops on (shops.id = orders.shop_id)'],
+			join: [ 'users on (users.id =  orders.user_id)', 'users as shops on (shops.id = orders.shop_id)' ],
 			limit: [ offset, limit ],
 			fields: [
 				'orders.*',
@@ -161,7 +161,7 @@ module.exports = {
 			message: 'My orders',
 			data: {
 				pagination: await apis.Paginations('orders', condition, offset, limit),
-				result: app.addUrl(final, ['profile', 'shop_profile'])
+				result: app.addUrl(final, [ 'profile', 'shop_profile' ])
 			}
 		};
 	}
