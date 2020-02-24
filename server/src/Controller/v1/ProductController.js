@@ -152,17 +152,20 @@ module.exports = {
 		const data = {};
 		if (parseInt(order_status) === 1) {
 			const { latitude, longitude } = Request.body.userInfo;
-			const driver = findDriver(latitude, longitude);
+			const driver = await findDriver(latitude, longitude);
 			if (!driver) throw new ApiError('No Driver Found', 400);
-			console.log(driver);
 			const notification = {};
 			updateOrderStatus.order_status = 1;
 			updateOrderStatus.driver_id = driver.id;
-			// DB.save('users', {
-			// 	id: driver.id,
-			// 	is_free: 0
-			// });
-			// data.driver_info = driver;
+			if (driver.profile) {
+				driver.profile = appURL + 'uploads/' + driver.profile;
+			}
+			updateOrderStatus.driver_info = JSON.stringify(driver);
+			DB.save('users', {
+				id: driver.id,
+				is_free: 0
+			});
+			data.driver_info = driver;
 			data.order_info = order_info;
 		} else {
 			updateOrderStatus.order_status = 2;
@@ -178,9 +181,8 @@ module.exports = {
 };
 
 const findDriver = async (latitude, longitude) => {
-	const driver = `select * from users where user_type = 3 and ( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ) < 10
-  and is_online = 1 and is_free=1 limit 1`;
-	console.log(driver);
+	const driver = `select id,name,email,phone,phone_code,profile from users where user_type = 3 and ( 6371 * acos( cos( radians(${latitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin(radians(latitude)) ) ) < 10
+	and is_online = 1 and is_free=1 limit 1`;
 	const result = await DB.first(driver);
 	if (result.length > 0) return result[0];
 	return {};
