@@ -23,12 +23,12 @@ module.exports = {
 		if (!order_info) throw new ApiError('Invaild Order id', 400);
 		const { order_id, order_status } = requestData;
 		let message = 'Order on the way';
-		if (order_status === 4) {
+		if (parseInt(order_status) === 4) {
 			DB.save('users', {
 				id: requestData.user_id,
 				is_free: 1
 			});
-			message = 'Order Complete';
+			message = 'Order has been completed';
 		}
 		DB.save('orders', {
 			id: order_id,
