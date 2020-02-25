@@ -110,11 +110,16 @@ module.exports = {
 		const user_type = Request.body.userInfo.user_type;
 		let offset = Request.params.offset || 1;
 		const limit = Request.query.limit || 10;
-		const order_status = Request.query.order_status || 1;
+		const order_status = Request.query.order_status || 0;
 		offset = (offset - 1) * limit;
-		const conditions = {
-			order_status
-		};
+		const conditions = {};
+		if (order_status === 0) {
+			conditions['NotEqual'] = {
+				order_status: 4
+			};
+		} else {
+			conditions['order_status'] = 4;
+		}
 		if (user_type === 1) {
 			conditions['user_id'] = user_id;
 		} else if (user_type === 2) {
