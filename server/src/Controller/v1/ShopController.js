@@ -105,6 +105,29 @@ module.exports = {
 			data: RequestData
 		};
 	},
+	giveRating: async (Request) => {
+		const required = {
+			user_id: Request.body.user_id,
+			shop_id: Request.body.shop_id,
+			product_id: Request.body.product_id,
+			rating: Request.body.rating,
+			comment: Request.body.comment
+		};
+		const RequestData = await apis.vaildation(required, {});
+		const condition = {
+			conditions: {
+				id: RequestData.shop_id,
+				user_type: 2
+			}
+		};
+		const result = await DB.find('users', 'first', condition);
+		if (!result) throw new ApiError('Invaild shop id', 422);
+		RequestData.rating_id = await DB.save('ratings', RequestData);
+		return {
+			message: 'Rating Successfully',
+			data: RequestData
+		};
+	},
 	myOrders: async (Request) => {
 		const user_id = Request.body.user_id;
 		const user_type = Request.body.userInfo.user_type;
