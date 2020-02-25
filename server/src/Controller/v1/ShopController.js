@@ -113,7 +113,7 @@ module.exports = {
 		const order_status = Request.query.order_status || 0;
 		offset = (offset - 1) * limit;
 		const conditions = {};
-		if (order_status === 0) {
+		if (parseInt(order_status) === 0) {
 			conditions['NotEqual'] = {
 				order_status: 4
 			};
