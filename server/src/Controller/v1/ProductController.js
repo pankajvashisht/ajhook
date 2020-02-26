@@ -44,7 +44,8 @@ module.exports = {
 			flavour: Request.body.flavour,
 			price: Request.body.price,
 			stock: Request.body.stock,
-			description: Request.body.description,
+      description: Request.body.description,
+      hookah_type: Request.body.hookah_type,
 			user_id: Request.body.user_id,
 			is_request: 1
 		};
@@ -90,7 +91,8 @@ module.exports = {
 			flavour: Request.body.flavour,
 			price: Request.body.price,
 			stock: Request.body.stock,
-			description: Request.body.description,
+      description: Request.body.description,
+      hookah_type: Request.body.hookah_type,
 			user_id: Request.body.user_id
 		};
 		const requestData = await apis.vaildation(required, nonRequired);
