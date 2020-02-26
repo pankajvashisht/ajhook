@@ -109,7 +109,6 @@ module.exports = {
 		const required = {
 			user_id: Request.body.user_id,
 			shop_id: Request.body.shop_id,
-			product_id: Request.body.product_id,
 			rating: Request.body.rating,
 			comment: Request.body.comment
 		};
