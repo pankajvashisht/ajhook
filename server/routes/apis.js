@@ -41,5 +41,10 @@ router
   .post(Apiresponse(ProductController.addProduct))
   .put(Apiresponse(ProductController.updateProduct))
   .delete(Apiresponse(ProductController.deleteProduct));
+router
+  .route('/rating/:offset([0-9]+)?/')
+  .get(Apiresponse(ShopController.getReview))
+  .post(Apiresponse(ShopController.giveRating))
+
 
 module.exports = router;

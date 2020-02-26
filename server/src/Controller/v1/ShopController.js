@@ -33,7 +33,7 @@ module.exports = {
 				'user_type',
 				'latitude',
 				'longitude',
-				`IFNULL((select avg(rating) from ratings where  user_id=users.id),0) as rating`,
+				`IFNULL((select avg(rating) from ratings where  shop_id=users.id),0) as rating`,
 				`round(( 6371 * acos( cos( radians(${lalitude}) ) * cos( radians(latitude) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${lalitude}) ) * sin(radians(latitude)) ) ),0) as total_distance`
 			],
 			having: [ 'total_distance <= 10' ],
@@ -46,6 +46,35 @@ module.exports = {
 			};
 		}
 		const result = await DB.find('users', 'all', condition);
+		return {
+			message: 'shop list',
+			data: app.addUrl(result, 'profile')
+		};
+	},
+	getReview: async (Request) => {
+		let offset = Request.params.offset || 1;
+		const limit = Request.query.limit || 10;
+		const shop_id = Request.query.shop_id ;
+		offset = (offset - 1) * limit;
+		const condition = {
+			conditions: {
+				shop_id,
+			},
+			join: ['users on (ratings.user_id = users.id)'],
+			fields: ['ratings.*',
+				'name',
+				'status',
+				'is_free',
+				'is_online',
+				'email',
+				'phone',
+				'phone_code',
+				'profile'
+			],
+			limit: [ offset, limit ],
+			orderBy: [ 'ratings.id desc' ]
+		};
+		const result = await DB.find('ratings', 'all', condition);
 		return {
 			message: 'shop list',
 			data: app.addUrl(result, 'profile')
