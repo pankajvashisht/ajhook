@@ -22,16 +22,18 @@ module.exports = {
 		if (!order_info) throw new ApiError('Invaild Order id', 400);
 		const { order_id, order_status } = requestData;
 		let message = 'Order on the way';
+		let pushMessage = 'driver is on the way please keep your id proof ready';
 		if (parseInt(order_status) === 4) {
 			DB.save('users', {
 				id: requestData.user_id,
 				is_free: 1
 			});
 			message = 'Order has been completed';
+			pushMessage = message;
 		}
 		setTimeout(() => {
 			apis.sendPush(order_info.user_id, {
-				message: message,
+				message: pushMessage,
 				data: order_info,
 				notification_code: 5
 			});
