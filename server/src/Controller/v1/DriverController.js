@@ -2,7 +2,6 @@ const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const app = require('../../../libary/CommanMethod');
-const { lang } = require('../../../config');
 let apis = new ApiController();
 let DB = new Db();
 
@@ -30,6 +29,13 @@ module.exports = {
 			});
 			message = 'Order has been completed';
 		}
+		setTimeout(() => {
+			apis.sendPush(order_info.user_id, {
+				message: message,
+				data: order_info,
+				notification_code: 5
+			});
+		}, 100);
 		DB.save('orders', {
 			id: order_id,
 			order_status

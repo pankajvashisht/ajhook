@@ -2,7 +2,6 @@ const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const app = require('../../../libary/CommanMethod');
-const { lang } = require('../../../config');
 let apis = new ApiController();
 let DB = new Db();
 
@@ -54,14 +53,15 @@ module.exports = {
 	getReview: async (Request) => {
 		let offset = Request.params.offset || 1;
 		const limit = Request.query.limit || 10;
-		const shop_id = Request.query.shop_id ;
+		const shop_id = Request.query.shop_id;
 		offset = (offset - 1) * limit;
 		const condition = {
 			conditions: {
-				shop_id,
+				shop_id
 			},
-			join: ['users on (ratings.user_id = users.id)'],
-			fields: ['ratings.*',
+			join: [ 'users on (ratings.user_id = users.id)' ],
+			fields: [
+				'ratings.*',
 				'name',
 				'status',
 				'is_free',
@@ -108,6 +108,13 @@ module.exports = {
 			longitude: Request.body.userInfo.longitude
 		});
 		RequestData.order_id = await DB.save('orders', RequestData);
+		setTimeout(() => {
+			apis.sendPush(RequestData.shop_id, {
+				message: 'You have new order',
+				data: product,
+				notification_code: 1
+			});
+		}, 100);
 		return {
 			message: 'Order add Successfully',
 			data: RequestData
@@ -151,6 +158,13 @@ module.exports = {
 		const result = await DB.find('users', 'first', condition);
 		if (!result) throw new ApiError('Invaild shop id', 422);
 		RequestData.rating_id = await DB.save('ratings', RequestData);
+		setTimeout(() => {
+			apis.sendPush(RequestData.shop_id, {
+				message: `${Request.body.userInfo.name} give you rating ${RequestData.rating}`,
+				data: RequestData,
+				notification_code: 2
+			});
+		}, 100);
 		return {
 			message: 'Rating Successfully',
 			data: RequestData

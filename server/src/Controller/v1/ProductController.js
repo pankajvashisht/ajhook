@@ -44,8 +44,8 @@ module.exports = {
 			flavour: Request.body.flavour,
 			price: Request.body.price,
 			stock: Request.body.stock,
-      description: Request.body.description,
-      hookah_type: Request.body.hookah_type,
+			description: Request.body.description,
+			hookah_type: Request.body.hookah_type,
 			user_id: Request.body.user_id,
 			is_request: 1
 		};
@@ -91,8 +91,8 @@ module.exports = {
 			flavour: Request.body.flavour,
 			price: Request.body.price,
 			stock: Request.body.stock,
-      description: Request.body.description,
-      hookah_type: Request.body.hookah_type,
+			description: Request.body.description,
+			hookah_type: Request.body.hookah_type,
 			user_id: Request.body.user_id
 		};
 		const requestData = await apis.vaildation(required, nonRequired);
@@ -148,6 +148,7 @@ module.exports = {
 		if (!order_info) throw new ApiError('Invaild Order id', 400);
 		const { order_id, shop_id, order_status } = requestData;
 		let message = 'Order Accepted Successfully';
+		let pushMessage = `order accepted by shop`;
 		const updateOrderStatus = {
 			id: order_id
 		};
@@ -156,7 +157,6 @@ module.exports = {
 			const { latitude, longitude } = Request.body.userInfo;
 			const driver = await findDriver(latitude, longitude);
 			if (!driver) throw new ApiError('No Driver Found', 400);
-			const notification = {};
 			updateOrderStatus.order_status = 1;
 			updateOrderStatus.driver_id = driver.id;
 			if (driver.profile) {
@@ -171,10 +171,24 @@ module.exports = {
 			data.order_info = order_info;
 		} else {
 			updateOrderStatus.order_status = 2;
+			pushMessage = `order rejected by shop`;
 			message = 'Order Rejeted';
 		}
 		DB.save('orders', updateOrderStatus);
-
+		setTimeout(() => {
+			apis.sendPush(order_info.user_id, {
+				message: pushMessage,
+				data: order_info,
+				notification_code: 3
+			});
+			if (requestData.driver_id) {
+				apis.sendPush(requestData.driver_id, {
+					message: `you have new order to deliver`,
+					data: order_info,
+					notification_code: 4
+				});
+			}
+		}, 100);
 		return {
 			message,
 			data

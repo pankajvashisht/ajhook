@@ -51,33 +51,23 @@ module.exports = {
 		}
 	},
 	send_push: function(data) {
-		const FCM = require('fcm-node');
-		const serverKey = config.GOOGLE_KEY; //put your server key here
-		const fcm = new FCM(serverKey);
-		let message = {
-			to: data.token,
-			collapse_key: 'your_collapse_key',
-
-			notification: {
-				title: config.App_name,
-				body: data.message
-			},
-
-			data: data.body
-    };
-		try {
-			fcm.send(message, function(err, response) {
-        if (err) {
-          console.log(err);
-					return false;
-        } else {
-          console.log(response);
-					return response;
-				}
+		const { FCM } = require('push-notification-node');
+		const GOOGLE_KEY = config.GOOGLE_KEY; //put your server key here
+		const fcm = new FCM(GOOGLE_KEY);
+		const body = {
+			body: data.message,
+			title: config.App_name,
+			notificationCode: 1,
+			data
+		};
+		fcm
+			.sendPromise(data.token, body)
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((err) => {
+				console.log(err);
 			});
-		} catch (err) {
-			throw err;
-		}
 	},
 	send_push_apn: function() {},
 	paypal: async function() {},

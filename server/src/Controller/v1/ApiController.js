@@ -99,20 +99,16 @@ class ApiController {
 		};
 	}
 
-	async sendPush(pushObject, user_id) {
-		const User = await DB.find('user_auths', 'all', {
+	async sendPush(user_id, pushObject) {
+		const User = await DB.find('users', 'first', {
 			conditions: {
-				user_id
+				id: user_id
 			}
 		});
-		setTimeout(() => {
-			User.forEach((value) => {
-				if (value.device_token) {
-					pushObject['token'] = value.device_token;
-					App.send_push(pushObject);
-				}
-			});
-		}, 100);
+		if (User.device_token) {
+			pushObject['token'] = User.device_token;
+			App.send_push(pushObject);
+		}
 	}
 
 	async userDetails(id) {
@@ -140,7 +136,7 @@ class ApiController {
 				'card_informations'
 			]
 		});
-		if (result.card_informations) { 
+		if (result.card_informations) {
 			result.card_informations = JSON.parse(result.card_informations);
 		}
 		return result;
