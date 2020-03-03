@@ -53,6 +53,7 @@ module.exports = {
 	send_push: function(data) {
 		const { FCM } = require('push-notification-node');
 		const GOOGLE_KEY = config.GOOGLE_KEY; //put your server key here
+		console.log(GOOGLE_KEY);
 		const fcm = new FCM(GOOGLE_KEY);
 		const body = {
 			body: data.message,
@@ -60,6 +61,7 @@ module.exports = {
 			notificationCode: 1,
 			data
 		};
+		console.log(body);
 		fcm
 			.sendPromise(data.token, body)
 			.then((res) => {
