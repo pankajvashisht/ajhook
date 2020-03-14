@@ -27,6 +27,7 @@ router.get('/app-information', Apiresponse(user.appInfo));
 router.get('/shops/:offset([0-9]+)', Apiresponse(ShopController.getShop));
 router.post('/order', Apiresponse(ShopController.orderHoohuk));
 router.get('/order/:offset([0-9]+)', Apiresponse(ShopController.myOrders));
+router.get('/order-details/:order_id([0-9]+)', Apiresponse(ShopController.orderDetails));
 router.post('/do-payment', Apiresponse(ShopController.doPayment));
 router.post('/accept-order', Apiresponse(ProductController.OrderAccept));
 router.post('/complete-order', Apiresponse(DriverController.CompleteOrders));

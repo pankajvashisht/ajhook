@@ -234,5 +234,60 @@ module.exports = {
 				result: app.addUrl(final, [ 'profile', 'shop_profile' ])
 			}
 		};
+	},
+	orderDetails: async (Request) => {
+		const user_id = Request.body.user_id;
+		const user_type = Request.body.userInfo.user_type;
+		const order_id = Request.params.order_id;	
+		const conditions = {
+			'orders.id': order_id
+		};
+		if (user_type === 1) {
+			conditions['user_id'] = user_id;
+		} else if (user_type === 2) {
+			conditions['shop_id'] = user_id;
+		} else {
+			conditions['driver_id'] = user_id;
+		}
+		const condition = {
+			conditions,
+			join: ['users on (users.id =  orders.user_id)', 'users as shops on (shops.id = orders.shop_id)'],
+			limit: [offset, limit],
+			fields: [
+				'orders.*',
+				'users.name',
+				'users.email',
+				'users.phone',
+				'users.phone_code',
+				'users.address',
+				'users.latitude',
+				'users.longitude',
+				'users.profile',
+				'shops.name as shop_name',
+				'shops.email as shop_email',
+				'shops.phone as shop_phone',
+				'shops.phone_code as shop_phone_code',
+				'shops.address as shop_address',
+				'shops.latitude as shop_lat',
+				'shops.longitude as shop_lng',
+				'shops.profile as shop_profile'
+			],
+			orderBy: ['orders.id desc']
+		};
+		const result = await DB.find('orders', 'all', condition);
+		if (result.length === 0) throw new ApiError('Invaild order id', 403);
+		const final = result.map((value) => {
+			if (value.product_details) {
+				value.product_details = JSON.parse(value.product_details);
+			}
+			if (value.address_details) {
+				value.address_details = JSON.parse(value.address_details);
+			}
+			return value;
+		});
+		return {
+			message: 'orders Details',
+			data: app.addUrl(final, ['profile', 'shop_profile'])[0]
+		};
 	}
 };
