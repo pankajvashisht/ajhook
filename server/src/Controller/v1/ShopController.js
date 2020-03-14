@@ -252,7 +252,6 @@ module.exports = {
 		const condition = {
 			conditions,
 			join: ['users on (users.id =  orders.user_id)', 'users as shops on (shops.id = orders.shop_id)'],
-			limit: [offset, limit],
 			fields: [
 				'orders.*',
 				'users.name',
