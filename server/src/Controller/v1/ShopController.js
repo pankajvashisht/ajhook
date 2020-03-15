@@ -85,6 +85,8 @@ module.exports = {
 			user_id: Request.body.user_id,
 			product_id: Request.body.product_id,
 			quantity: Request.body.quantity || 1,
+			service_fees: Request.body.quantity || 0,
+			taxes: Request.body.quantity || 0,
 			order_date: Request.body.order_date || app.currentTime,
 			status: 1
 		};
@@ -238,7 +240,7 @@ module.exports = {
 	orderDetails: async (Request) => {
 		const user_id = Request.body.user_id;
 		const user_type = Request.body.userInfo.user_type;
-		const order_id = Request.params.order_id;	
+		const order_id = Request.params.order_id;
 		const conditions = {
 			'orders.id': order_id
 		};
@@ -251,7 +253,7 @@ module.exports = {
 		}
 		const condition = {
 			conditions,
-			join: ['users on (users.id =  orders.user_id)', 'users as shops on (shops.id = orders.shop_id)'],
+			join: [ 'users on (users.id =  orders.user_id)', 'users as shops on (shops.id = orders.shop_id)' ],
 			fields: [
 				'orders.*',
 				'users.name',
@@ -271,7 +273,7 @@ module.exports = {
 				'shops.longitude as shop_lng',
 				'shops.profile as shop_profile'
 			],
-			orderBy: ['orders.id desc']
+			orderBy: [ 'orders.id desc' ]
 		};
 		const result = await DB.find('orders', 'all', condition);
 		if (result.length === 0) throw new ApiError('Invaild order id', 403);
@@ -286,7 +288,7 @@ module.exports = {
 		});
 		return {
 			message: 'orders Details',
-			data: app.addUrl(final, ['profile', 'shop_profile'])[0]
+			data: app.addUrl(final, [ 'profile', 'shop_profile' ])[0]
 		};
 	}
 };
