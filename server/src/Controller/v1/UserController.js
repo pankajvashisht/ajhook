@@ -49,7 +49,7 @@ class UserController extends ApiController {
 		}
 		return {
 			message: lang[req.lang].verifyOtp,
-			data:  usersInfo
+			data: usersInfo
 		};
 	}
 
@@ -99,8 +99,6 @@ class UserController extends ApiController {
 			data: userInfo
 		};
 	}
-
-	
 
 	async forgotPassword(req) {
 		let required = {
@@ -206,10 +204,12 @@ class UserController extends ApiController {
 			latitude: req.body.latitude,
 			longitude: req.body.longitude,
 			address: req.body.address,
+			taxes: req.body.device_type,
+			service_fees: req.body.device_type,
 			card_informations: req.body.card_informations,
 			name: req.body.name,
 			is_free: req.body.is_free,
-			is_online: req.body.is_online,
+			is_online: req.body.is_online
 		};
 		const request_data = await super.vaildation(required, non_required);
 		if (req.files && req.files.profile) {

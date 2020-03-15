@@ -133,6 +133,8 @@ class ApiController {
 				'licence',
 				'latitude',
 				'longitude',
+				'service_fees',
+				'taxes',
 				'card_informations'
 			]
 		});

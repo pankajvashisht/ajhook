@@ -18,7 +18,14 @@ module.exports = {
 				user_id
 			},
 			join: [ 'users on (users.id = products.user_id)' ],
-			fields: [ 'products.*', 'users.name as shop_name', 'users.address', 'users.profile' ],
+			fields: [
+				'products.*',
+				'users.name as shop_name',
+				'users.address',
+				'users.profile',
+				'users.service_fees',
+				'users.taxes'
+			],
 			limit: [ offset, limit ],
 			orderBy: [ 'id desc' ]
 		};
@@ -68,7 +75,14 @@ module.exports = {
 				'products.id': product_id
 			},
 			join: [ 'users on (users.id = products.user_id)' ],
-			fields: [ 'products.*', 'users.name as shop_name', 'users.address', 'users.profile' ]
+			fields: [
+				'products.*',
+				'users.name as shop_name',
+				'users.address',
+				'users.profile',
+				'users.service_fees',
+				'users.taxes'
+			]
 		});
 		if (!product_info) throw new ApiError('Invaild Product id', 400);
 		if (product_info.image) {
