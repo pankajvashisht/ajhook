@@ -56,7 +56,7 @@ module.exports = {
 		const orderDetails = await DB.find('orders', 'first', {
 			conditions: {
 				id: RequestData.order_id,
-				user_id
+				user_id: RequestData.user_id
 			}
 		});
 		if (!orderDetails) throw new ApiError('Invaild order id', 404);
