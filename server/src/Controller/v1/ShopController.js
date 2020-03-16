@@ -110,6 +110,7 @@ module.exports = {
 			longitude: Request.body.userInfo.longitude
 		});
 		RequestData.order_id = await DB.save('orders', RequestData);
+		product.order_id = RequestData.order_id;
 		setTimeout(() => {
 			apis.sendPush(RequestData.shop_id, {
 				message: 'You have new order',
