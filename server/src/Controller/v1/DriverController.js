@@ -50,16 +50,24 @@ module.exports = {
 	TrackDriver: async (Request) => {
 		const required = {
 			user_id: Request.body.user_id,
-			shop_id: Request.body.shop_id,
-			product_id: Request.body.product_id,
-			quantity: Request.body.quantity || 1,
-			order_date: RequestData.body.order_date || app.currentTime(),
-			status: 1
+			order_id: Request.body.order_id,
 		};
 		const RequestData = await apis.vaildation(required, {});
+		const orderDetails = await DB.find('orders', 'first', {
+			conditions: {
+				id: RequestData.order_id,
+				user_id
+			}
+		});
+		if (!orderDetails) throw new ApiError('Invaild order id', 404);
+		const driverInfo = await DB.find('users', 'first', {
+			conditions: {
+				id: orderDetails.driver_id,
+			}, fields: ['latitude', 'longitude']
+		})
 		return {
-			message: 'Order add Successfully',
-			data: RequestData
+			message: 'Driver location',
+			data: driverInfo
 		};
 	}
 };
