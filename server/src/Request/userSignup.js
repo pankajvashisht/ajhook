@@ -15,8 +15,8 @@ module.exports = async (Request, res, next) => {
 	};
 	const non_required = {
 		device_type: Request.body.device_type,
-		taxes: Request.body.device_type,
-		service_fees: Request.body.device_type,
+		taxes: Request.body.taxes,
+		service_fees: Request.body.service_fees,
 		device_token: Request.body.device_token,
 		card_informations: Request.body.card_informations,
 		dob: Request.body.dob,
