@@ -215,5 +215,5 @@ const findDriver = async (latitude, longitude) => {
 	and is_online = 1 and is_free=1 limit 1`;
 	const result = await DB.first(driver);
 	if (result.length > 0) return result[0];
-	return {};
+	return null;
 };
