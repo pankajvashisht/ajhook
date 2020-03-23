@@ -3,15 +3,10 @@ import ListPageHeading from '../../../containers/pages/ListPageHeading';
 import Pagination from '../../../containers/pages/Pagination';
 import { drivers } from '../../../Apis/admin';
 import { NotificationManager } from '../../../components/common/react-notifications';
-import { Card,CardBody, CardTitle } from 'reactstrap';
+import { Card, CardBody, CardTitle } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Colxx } from '../../../components/common/CustomBootstrap';
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker
-} from "react-google-maps";
+import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
 const additional = {
 	currentPage: 1,
 	totalItemCount: 0,
@@ -19,12 +14,12 @@ const additional = {
 	search: '',
 	pageSizes: [ 10, 20, 50, 100 ]
 };
-const MapWithAMarker  = withScriptjs(
-  withGoogleMap(props => (
-    <GoogleMap defaultZoom={8} defaultCenter={{ lat:props.lat, lng:props.lng }}>
-      <Marker position={{ lat:props.lat, lng:props.lng }} />
-    </GoogleMap>
-  ))
+const MapWithAMarker = withScriptjs(
+	withGoogleMap((props) => (
+		<GoogleMap defaultZoom={8} defaultCenter={{ lat: props.lat, lng: props.lng }}>
+			<Marker position={{ lat: props.lat, lng: props.lng }} />
+		</GoogleMap>
+	))
 );
 const DriverMap = React.memo((props) => {
 	const [ pageInfo, setPageInfo ] = useState(additional);
@@ -32,7 +27,7 @@ const DriverMap = React.memo((props) => {
 	const [ isLoading, setIsLoading ] = useState(true);
 	const [ selectedPageSize, setSelectedPageSize ] = useState(10);
 	const [ currentPage, setCurrentPage ] = useState(1);
-    const [ searchText, setSearchtext ] = useState(undefined);
+	const [ searchText, setSearchtext ] = useState(undefined);
 
 	useEffect(
 		() => {
@@ -56,13 +51,13 @@ const DriverMap = React.memo((props) => {
 				});
 		},
 		[ selectedPageSize, currentPage, searchText ]
-    );
-    const isOnline = (status) => {
-        if(status===1){
-            return (<span   className="badge badge-pill badge-success">Online</span>);
-        }
-        return (<span   className="badge badge-pill badge-danger">Offline</span>);
-    };
+	);
+	const isOnline = (status) => {
+		if (status === 1) {
+			return <span className="badge badge-pill badge-success">Online</span>;
+		}
+		return <span className="badge badge-pill badge-danger">Offline</span>;
+	};
 	const onSearchKey = (event) => {
 		setSearchtext(event.target.value);
 	};
@@ -73,8 +68,7 @@ const DriverMap = React.memo((props) => {
 	const onChangePage = (value) => {
 		setCurrentPage(value);
 	};
-	
-	
+
 	const startIndex = (currentPage - 1) * selectedPageSize;
 	const endIndex = currentPage * selectedPageSize;
 	return isLoading ? (
@@ -94,37 +88,37 @@ const DriverMap = React.memo((props) => {
 				pageSizes={pageInfo.pageSizes}
 			/>
 			{totalPosts.map((post, key) => (
-                <>
-				
-                <Colxx xxs="12" key={post.created} className="mb-6">
-                    <Card>
-                    <CardBody>
-                        <CardTitle>
-                        <NavLink
-                            to={{
-                                pathname: '/driver-details',
-                                state: { post }
-                            }}
-                            className="w-40 w-sm-100"
-                        >
+				<React.Fragment>
+					<Colxx xxs="12" key={post.created} className="mb-6">
+						<Card>
+							<CardBody>
+								<CardTitle>
+									<NavLink
+										to={{
+											pathname: '/driver-details',
+											state: { post }
+										}}
+										className="w-40 w-sm-100"
+									>
 										<p className="list-item-heading mb-1 truncate">{post.name}</p>
 									</NavLink>
-                                    <CardTitle className={{float:"right"}}>{isOnline(post.is_online)}</CardTitle>
-                        </CardTitle>
-                        
-                        <MapWithAMarker
-                        lat={post.latitude}
-                        lng={post.longitude}
-                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5-nBPRTKoIFzoVXfALW-oPnBlCLQTTIY&v=3.exp&libraries=geometry,drawing,places"
-                        loadingElement={<div className="map-item" />}
-                        containerElement={<div className="map-item" />}
-                        mapElement={<div className="map-item" />}/>
-                    </CardBody>
-                    </Card>
-                </Colxx>  
-                </>
+									<CardTitle className={{ float: 'right' }}>{isOnline(post.is_online)}</CardTitle>
+								</CardTitle>
+
+								<MapWithAMarker
+									lat={post.latitude}
+									lng={post.longitude}
+									googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9Y6zHmXQBdQYaPuotUOJAKTSe4KzsVyI&libraries=geometry,drawing,places"
+									loadingElement={<div className="map-item" />}
+									containerElement={<div className="map-item" />}
+									mapElement={<div className="map-item" />}
+								/>
+							</CardBody>
+						</Card>
+					</Colxx>
+				</React.Fragment>
 			))}
-                                 
+
 			<Pagination
 				currentPage={currentPage}
 				totalPage={pageInfo.totalPage}
