@@ -88,6 +88,10 @@ module.exports = {
 			service_fees: Request.body.quantity || 0,
 			taxes: Request.body.quantity || 0,
 			order_date: Request.body.order_date || app.currentTime,
+			address: Request.body.address || '',
+			latitude: Request.body.latitude || 0,
+			longitude: Request.body.longitude || 0,
+			appartment_street_number: Request.body.appartment_street_number || '',
 			status: 1
 		};
 		const RequestData = await apis.vaildation(required, {});
@@ -105,9 +109,10 @@ module.exports = {
 		product.stock -= RequestData.quantity;
 		DB.save('products', product);
 		RequestData.address_details = JSON.stringify({
-			address: Request.body.userInfo.address,
-			lalitude: Request.body.userInfo.lalitude,
-			longitude: Request.body.userInfo.longitude
+			address: RequestData.address,
+			lalitude: RequestData.lalitude,
+			longitude: RequestData.longitude,
+			appartment_street_number: RequestData.appartment_street_number
 		});
 		RequestData.order_id = await DB.save('orders', RequestData);
 		product.order_id = RequestData.order_id;
