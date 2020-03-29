@@ -17,13 +17,13 @@ module.exports = {
 			function(err, account) {
 				if (err) {
 					DB.save('strips_fail_logs', {
-						informations: err
+						informations: JSON.stringify(err)
 					});
 				} else {
 					DB.save('users', {
 						id: user_id,
 						strip_id: account.id,
-						strip_info: account
+						strip_info: JSON.stringify(account)
 					});
 					if (bankAccountDetails) {
 						createBankAccount(account.id, bankAccountDetails, user_id);
@@ -41,7 +41,7 @@ const createBankAccount = (stripID, bankAccountDetails, userID) => {
 	) {
 		if (err) {
 			DB.save('strips_fail_logs', {
-				informations: err,
+				informations: JSON.stringify(err),
 				type: 1
 			});
 		} else {
