@@ -3,6 +3,7 @@ const app = require('../../../libary/CommanMethod');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const { lang } = require('../../../config');
+const { PaymentController } = require('./index');
 const DB = new Db();
 
 class UserController extends ApiController {
@@ -20,9 +21,13 @@ class UserController extends ApiController {
 		if (Request.files && Request.files.licence) {
 			RequestData.licence = await app.upload_pic_with_await(Request.files.licence);
 		}
-		await DB.save('users', RequestData);
+		const user_id = await DB.save('users', RequestData);
 		RequestData.lang = Request.lang;
 		setTimeout(() => {
+			const { email, card_informations, user_type } = RequestData;
+			if (parseInt(user_type) !== 0) {
+				PaymentController.createAccount(user_id, email, card_informations);
+			}
 			this.mails(RequestData);
 		}, 100);
 		return {
