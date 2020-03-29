@@ -3,9 +3,8 @@ const app = require('../../../libary/CommanMethod');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const { lang } = require('../../../config');
-const { PaymentController } = require('./index');
+const PaymentController  = require('./PaymentController');
 const DB = new Db();
-
 class UserController extends ApiController {
 	constructor() {
 		super();
@@ -14,6 +13,7 @@ class UserController extends ApiController {
 	}
 
 	async addUser(Request) {
+		
 		const { RequestData } = Request;
 		if (Request.files && Request.files.profile) {
 			RequestData.profile = await app.upload_pic_with_await(Request.files.profile);
