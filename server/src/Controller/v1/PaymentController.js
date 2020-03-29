@@ -1,7 +1,8 @@
 require('dotenv').config();
 const stripKey = process.env.STRIP_KEY || 'sk_test_F1R9sLQEv0jqB808xKIZroJE00I0JruSLj';
 const stripe = require('stripe')(stripKey);
-const DB = require('../../../libary/sqlBulider');
+const Db = require('../../../libary/sqlBulider');
+const DB = new Db();
 
 module.exports = {
 	createAccount: async (user_id, email, bankAccountDetails = null) => {
