@@ -14,8 +14,7 @@ module.exports = {
 				business_type: 'individual',
 				requested_capabilities: [
 					'card_payments',
-					'transfers',
-					'au_becs_debit_payments',
+					'transfers'
 				]
 			},
 			function(err, account) {
