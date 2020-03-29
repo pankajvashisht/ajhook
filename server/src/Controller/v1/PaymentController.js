@@ -15,6 +15,7 @@ module.exports = {
 				requested_capabilities: [
 					'card_payments',
 					'transfers',
+					'Payouts'
 				]
 			},
 			function(err, account) {
@@ -35,15 +36,46 @@ module.exports = {
 				}
 			}
 		);
+	},
+	payoutBalance: async (amount, stripeAccount, userID) =>{  
+		try {
+			const result = await stripe.payouts.create(
+				{
+					amount: amount,
+					currency: 'usd',
+					method: 'instant',
+				},
+				{ stripeAccount }
+			);
+		  return result;		
+		} catch(err) {
+			DB.save('strips_fail_logs', {
+				informations: JSON.stringify(err),
+				user_id: userID,
+				type: 1
+			});
+			return false;
+		}
+	},
+	getStripBalance: async (stripe_account) => {
+		try {
+			return await stripe.balance.retrieve({
+				stripe_account
+			});
+		}
+		catch(err){
+			return false;
+		}
 	}
 };
 
 const createBankAccount = (stripID, bankAccountDetails, userID) => {
-	stripe.customers.createSource('cus_GyvhSbqGLjoeHO', { source: stripID, ...bankAccountDetails }, function(
+	stripe.accounts.createExternalAccount(stripID, {external_account:{...bankAccountDetails}}, function(
 		err,
 		bank_account
 	) {
 		if (err) {
+			console.log(err);
 			DB.save('strips_fail_logs', {
 				informations: JSON.stringify(err),
 				user_id: userID,
