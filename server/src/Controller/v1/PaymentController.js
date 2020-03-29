@@ -12,10 +12,10 @@ module.exports = {
 				country: 'US',
 				email: email,
 				business_type: 'individual',
-				requested_capabilities: [ 'card_payments', 'transfers']
 			},
 			function(err, account) {
 				if (err) {
+					console.log(err);
 					DB.save('strips_fail_logs', {
 						informations: JSON.stringify(err)
 					});
