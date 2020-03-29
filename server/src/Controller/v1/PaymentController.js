@@ -12,7 +12,7 @@ module.exports = {
 				country: 'US',
 				email: email,
 				business_type: 'individual',
-				requested_capabilities: [ 'card_payments', 'transfers', '' ]
+				requested_capabilities: [ 'card_payments', 'transfers']
 			},
 			function(err, account) {
 				if (err) {
