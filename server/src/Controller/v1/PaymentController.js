@@ -15,7 +15,7 @@ module.exports = {
 				requested_capabilities: [
 					'card_payments',
 					'transfers',
-					'Payouts'
+					'au_becs_debit_payments',
 				]
 			},
 			function(err, account) {
