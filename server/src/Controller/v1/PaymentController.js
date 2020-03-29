@@ -6,7 +6,7 @@ const DB = new Db();
 
 module.exports = {
 	createAccount: async (user_id, email, bankAccountDetails = null) => {
-		stripe.accounts.create(
+		stripe.customers.create(
 			{
 				type: 'custom',
 				country: 'US',
@@ -17,6 +17,7 @@ module.exports = {
 				if (err) {
 					console.log(err);
 					DB.save('strips_fail_logs', {
+						user_id,
 						informations: JSON.stringify(err)
 					});
 				} else {
@@ -42,6 +43,7 @@ const createBankAccount = (stripID, bankAccountDetails, userID) => {
 		if (err) {
 			DB.save('strips_fail_logs', {
 				informations: JSON.stringify(err),
+				user_id: userID,
 				type: 1
 			});
 		} else {
