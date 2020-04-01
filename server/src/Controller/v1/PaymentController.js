@@ -65,7 +65,28 @@ module.exports = {
 		catch(err){
 			return false;
 		}
-	}
+	},transfersAmount: async (destination, amount, orderID) => {
+		stripe.transfers.create(
+			{
+				amount,
+				currency: 'usd',
+				destination,
+				transfer_group: orderID,
+			},
+			function(err, transfer) {
+				if(err){
+					DB.save('strips_fail_logs', {
+						informations: JSON.stringify(err),
+						user_id: orderID,
+						type: 0
+					});
+					return false;
+				} else {
+					return transfer;
+				}
+			}
+		);
+	},
 };
 
 const createBankAccount = (stripID, bankAccountDetails, userID) => {
@@ -74,7 +95,6 @@ const createBankAccount = (stripID, bankAccountDetails, userID) => {
 		bank_account
 	) {
 		if (err) {
-			console.log(err);
 			DB.save('strips_fail_logs', {
 				informations: JSON.stringify(err),
 				user_id: userID,

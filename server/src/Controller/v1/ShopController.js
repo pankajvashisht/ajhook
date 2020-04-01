@@ -110,7 +110,7 @@ module.exports = {
 		DB.save('products', product);
 		RequestData.address_details = JSON.stringify({
 			address: RequestData.address,
-			lalitude: RequestData.lalitude,
+			latitude: RequestData.latitude,
 			longitude: RequestData.longitude,
 			appartment_street_number: RequestData.appartment_street_number
 		});
