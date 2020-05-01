@@ -56,13 +56,13 @@ module.exports = {
 	},
 	stripeHook: async (Request) => {
 		await DB.save('strips_fail_logs', {
-			informations: JSON.stringify(Request.body),
+			informations: JSON.stringify(Request),
 			user_id: Request.params.user_id,
 			type: 5, // strinp hook log
 		});
 		return {
-			message: 'Hook Success full done',
-			data: Request.body,
+			message: 'Hook Successfully done',
+			data: [],
 		};
 	},
 	getStripBalance: async (stripe_account) => {

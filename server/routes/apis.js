@@ -36,10 +36,6 @@ router.post('/do-payment', Apiresponse(ShopController.doPayment));
 router.post('/accept-order', Apiresponse(ProductController.OrderAccept));
 router.post('/complete-order', Apiresponse(DriverController.CompleteOrders));
 router.post('/track-driver', Apiresponse(DriverController.TrackDriver));
-router.post(
-	'/stripe-success/:user_id([0-9]+)',
-	Apiresponse(PaymentController.stripeHook)
-);
 router.get(
 	'/product-detail/:product_id([0-9]+)',
 	Apiresponse(ProductController.productDetails)
@@ -54,5 +50,8 @@ router
 	.route('/rating/:offset([0-9]+)?/')
 	.get(Apiresponse(ShopController.getReview))
 	.post(Apiresponse(ShopController.giveRating));
-
+router
+	.route('/stripe-success/:user_id([0-9]+)')
+	.get(Apiresponse(PaymentController.stripeHook))
+	.post(Apiresponse(PaymentController.stripeHook));
 module.exports = router;
