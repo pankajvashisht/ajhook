@@ -1,6 +1,6 @@
 const missingRoutes = {
 	'app-information': 'GET',
-	forgot_password: 'POST',
+	'forgot-password': 'POST',
 	'user/login': 'POST',
 	user: 'POST',
 	'stripe-success': 'ALL',

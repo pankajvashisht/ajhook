@@ -108,7 +108,6 @@ module.exports = {
 				}
 			);
 		});
-		console.log(Links);
 		return {
 			message: 'Account link url',
 			data: Links,
