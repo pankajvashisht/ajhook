@@ -86,6 +86,8 @@ module.exports = {
 				type: 'custom_account_verification',
 			},
 			function (err, accountLink) {
+				console.log(err);
+				console.log(accountLink);
 				if (err) throw new ApiError(JSON.stringify(err));
 				return {
 					message: 'Account link url',
