@@ -68,7 +68,6 @@ module.exports = {
 		};
 	},
 	stripeAccountLink: async (Request) => {
-		console.log(Request.body);
 		const {
 			user_id,
 			userInfo: { strip_id = 0 },
@@ -78,23 +77,25 @@ module.exports = {
 				'Your have not register in the stripe. First create a strip account',
 				400
 			);
-		stripe.accountLinks.create(
-			{
-				account: strip_id,
-				failure_url: `${appURL}apis/v1/stripe-success${user_id}?type=fail`,
-				success_url: `${appURL}apis/v1/stripe-success${user_id}?type=success`,
-				type: 'custom_account_verification',
-			},
-			function (err, accountLink) {
-				console.log(err);
-				console.log(accountLink);
-				if (err) throw new ApiError(JSON.stringify(err));
-				return {
-					message: 'Account link url',
-					data: accountLink,
-				};
-			}
-		);
+		const Links = await new Promise((Resolve) => {
+			stripe.accountLinks.create(
+				{
+					account: strip_id,
+					failure_url: `${appURL}apis/v1/stripe-success${user_id}?type=fail`,
+					success_url: `${appURL}apis/v1/stripe-success${user_id}?type=success`,
+					type: 'custom_account_verification',
+				},
+				function (err, accountLink) {
+					if (err) throw new ApiError(err);
+					Resolve(accountLink);
+				}
+			);
+		});
+		console.log(Links);
+		return {
+			message: 'Account link url',
+			data: Links,
+		};
 	},
 	getStripBalance: async (stripe_account) => {
 		try {
