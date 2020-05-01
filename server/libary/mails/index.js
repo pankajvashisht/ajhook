@@ -1,5 +1,5 @@
-const  nodemailer = require('./nodemailer')
+const MailClient = require('./nodemailer');
 
 module.exports = {
-    nodemailer
+	MailClient,
 };
