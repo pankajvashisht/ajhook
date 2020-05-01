@@ -6,7 +6,8 @@ const passRoute = [
 	'/forgot-password',
 	'/user/login',
 	'/user',
-	'/social-login'
+	'/social-login',
+	'/stripe-success',
 ];
 const UserAuth = async (req, res, next) => {
 	try {
@@ -18,7 +19,7 @@ const UserAuth = async (req, res, next) => {
 		}
 		let user_details = await DB.find('users', 'first', {
 			conditions: {
-				authorization_key: req.headers.authorization_key
+				authorization_key: req.headers.authorization_key,
 			},
 			fields: [
 				'id',
@@ -38,8 +39,8 @@ const UserAuth = async (req, res, next) => {
 				'latitude',
 				'longitude',
 				'password',
-				'otp'
-			]
+				'otp',
+			],
 		});
 		if (user_details) {
 			req.body.user_id = user_details.id;

@@ -1,5 +1,6 @@
 require('dotenv').config();
-const stripKey = process.env.STRIP_KEY || 'sk_test_F1R9sLQEv0jqB808xKIZroJE00I0JruSLj';
+const stripKey =
+	process.env.STRIP_KEY || 'sk_test_F1R9sLQEv0jqB808xKIZroJE00I0JruSLj';
 const stripe = require('stripe')(stripKey);
 const Db = require('../../../libary/sqlBulider');
 const DB = new Db();
@@ -12,22 +13,19 @@ module.exports = {
 				country: 'US',
 				email: email,
 				business_type: 'individual',
-				requested_capabilities: [
-					'card_payments',
-					'transfers'
-				]
+				requested_capabilities: ['card_payments', 'transfers'],
 			},
-			function(err, account) {
+			function (err, account) {
 				if (err) {
 					DB.save('strips_fail_logs', {
 						user_id,
-						informations: JSON.stringify(err)
+						informations: JSON.stringify(err),
 					});
 				} else {
 					DB.save('users', {
 						id: user_id,
 						strip_id: account.id,
-						strip_info: JSON.stringify(account)
+						strip_info: JSON.stringify(account),
 					});
 					if (bankAccountDetails) {
 						createBankAccount(account.id, bankAccountDetails, user_id);
@@ -36,7 +34,7 @@ module.exports = {
 			}
 		);
 	},
-	payoutBalance: async (amount, stripeAccount, userID) =>{  
+	payoutBalance: async (amount, stripeAccount, userID) => {
 		try {
 			const result = await stripe.payouts.create(
 				{
@@ -46,26 +44,37 @@ module.exports = {
 				},
 				{ stripeAccount }
 			);
-		  return result;		
-		} catch(err) {
+			return result;
+		} catch (err) {
 			DB.save('strips_fail_logs', {
 				informations: JSON.stringify(err),
 				user_id: userID,
-				type: 1
+				type: 1,
 			});
 			return false;
 		}
 	},
+	stripeHook: async (Request) => {
+		await DB.save('strips_fail_logs', {
+			informations: JSON.stringify(Request.body),
+			user_id: Request.params.user_id,
+			type: 5, // strinp hook log
+		});
+		return {
+			message: 'Hook Success full done',
+			data: Request.body,
+		};
+	},
 	getStripBalance: async (stripe_account) => {
 		try {
 			return await stripe.balance.retrieve({
-				stripe_account
+				stripe_account,
 			});
-		}
-		catch(err){
+		} catch (err) {
 			return false;
 		}
-	},transfersAmount: async (destination, amount, orderID) => {
+	},
+	transfersAmount: async (destination, amount, orderID) => {
 		stripe.transfers.create(
 			{
 				amount,
@@ -73,12 +82,12 @@ module.exports = {
 				destination,
 				transfer_group: orderID,
 			},
-			function(err, transfer) {
-				if(err){
+			function (err, transfer) {
+				if (err) {
 					DB.save('strips_fail_logs', {
 						informations: JSON.stringify(err),
 						user_id: orderID,
-						type: 0
+						type: 0,
 					});
 					return false;
 				} else {
@@ -90,22 +99,23 @@ module.exports = {
 };
 
 const createBankAccount = (stripID, bankAccountDetails, userID) => {
-	stripe.accounts.createExternalAccount(stripID, {external_account:{...bankAccountDetails}}, function(
-		err,
-		bank_account
-	) {
-		if (err) {
-			DB.save('strips_fail_logs', {
-				informations: JSON.stringify(err),
-				user_id: userID,
-				type: 1
-			});
-		} else {
-			DB.save('users', {
-				id: userID,
-				strinp_bank_account_id: bank_account.id,
-				bank_account
-			});
+	stripe.accounts.createExternalAccount(
+		stripID,
+		{ external_account: { ...bankAccountDetails } },
+		function (err, bank_account) {
+			if (err) {
+				DB.save('strips_fail_logs', {
+					informations: JSON.stringify(err),
+					user_id: userID,
+					type: 1,
+				});
+			} else {
+				DB.save('users', {
+					id: userID,
+					strinp_bank_account_id: bank_account.id,
+					bank_account,
+				});
+			}
 		}
-	});
+	);
 };

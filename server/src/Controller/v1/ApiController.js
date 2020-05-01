@@ -10,7 +10,9 @@ class ApiController {
 		try {
 			let message = '';
 			let empty = [];
-			let table_name = required.hasOwnProperty('table_name') ? required.table_name : 'users';
+			let table_name = required.hasOwnProperty('table_name')
+				? required.table_name
+				: 'users';
 			for (let key in required) {
 				if (required.hasOwnProperty(key)) {
 					if (required[key] === undefined || required[key] === '') {
@@ -30,17 +32,27 @@ class ApiController {
 
 			if (required.hasOwnProperty('checkexist') && required.checkexist === 1) {
 				if (required.hasOwnProperty('email')) {
-					if (await this.checkingAvailability('email', required.email, table_name)) {
+					if (
+						await this.checkingAvailability('email', required.email, table_name)
+					) {
 						throw new ApiError(lang[_Lang].emailRegister);
 					}
 				}
 				if (required.hasOwnProperty('phone')) {
-					if (await this.checkingAvailability('phone', required.phone, table_name)) {
+					if (
+						await this.checkingAvailability('phone', required.phone, table_name)
+					) {
 						throw new ApiError(lang[_Lang].emailRegister);
 					}
 				}
 				if (required.hasOwnProperty('username')) {
-					if (await this.checkingAvailability('username', required.username, table_name)) {
+					if (
+						await this.checkingAvailability(
+							'username',
+							required.username,
+							table_name
+						)
+					) {
 						throw new ApiError('username already exits');
 					}
 				}
@@ -49,14 +61,23 @@ class ApiController {
 			let final_data = Object.assign(required, non_required);
 
 			if (final_data.hasOwnProperty('password')) {
-				final_data.password = crypto.createHash('sha1').update(final_data.password).digest('hex');
+				final_data.password = crypto
+					.createHash('sha1')
+					.update(final_data.password)
+					.digest('hex');
 			}
 
 			if (final_data.hasOwnProperty('old_password')) {
-				final_data.old_password = crypto.createHash('sha1').update(final_data.old_password).digest('hex');
+				final_data.old_password = crypto
+					.createHash('sha1')
+					.update(final_data.old_password)
+					.digest('hex');
 			}
 			if (final_data.hasOwnProperty('new_password')) {
-				final_data.new_password = crypto.createHash('sha1').update(final_data.new_password).digest('hex');
+				final_data.new_password = crypto
+					.createHash('sha1')
+					.update(final_data.new_password)
+					.digest('hex');
 			}
 
 			for (let data in final_data) {
@@ -75,7 +96,14 @@ class ApiController {
 	}
 
 	async checkingAvailability(key, value, table_name) {
-		let query = 'select * from ' + table_name + ' where `' + key + "` = '" + value + "' limit 1";
+		let query =
+			'select * from ' +
+			table_name +
+			' where `' +
+			key +
+			"` = '" +
+			value +
+			"' limit 1";
 		let data = await DB.first(query);
 		if (data.length) {
 			return true;
@@ -95,15 +123,15 @@ class ApiController {
 			currentPage: page + 1,
 			totalPage,
 			totalRecord: totalRecord[0].totalRecord,
-			limit
+			limit,
 		};
 	}
 
 	async sendPush(user_id, pushObject) {
 		const User = await DB.find('users', 'first', {
 			conditions: {
-				id: user_id
-			}
+				id: user_id,
+			},
 		});
 		if (User.device_token) {
 			pushObject['token'] = User.device_token;
@@ -114,7 +142,7 @@ class ApiController {
 	async userDetails(id) {
 		const result = await DB.find('users', 'first', {
 			conditions: {
-				id: id
+				id: id,
 			},
 			fields: [
 				'id',
@@ -135,11 +163,17 @@ class ApiController {
 				'longitude',
 				'service_fees',
 				'taxes',
-				'card_informations'
-			]
+				'card_informations',
+				'strip_id',
+				'strip_info',
+				'stripe_connect',
+			],
 		});
 		if (result.card_informations) {
 			result.card_informations = JSON.parse(result.card_informations);
+		}
+		if (result.strip_info) {
+			result.strip_info = JSON.parse(result.strip_info);
 		}
 		return result;
 	}
