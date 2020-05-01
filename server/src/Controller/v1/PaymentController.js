@@ -1,11 +1,12 @@
 require('dotenv').config();
+const ApiController = require('./ApiController');
 const ApiError = require('../../Exceptions/ApiError');
 const stripKey =
 	process.env.STRIP_KEY || 'sk_test_F1R9sLQEv0jqB808xKIZroJE00I0JruSLj';
 const stripe = require('stripe')(stripKey);
 const Db = require('../../../libary/sqlBulider');
 const DB = new Db();
-
+let apis = new ApiController();
 module.exports = {
 	createAccount: async (user_id, email, bankAccountDetails = null) => {
 		stripe.account.create(
@@ -56,14 +57,30 @@ module.exports = {
 		}
 	},
 	stripeHook: async (Request) => {
-		const { query, body, params } = Request;
+		const {
+			query,
+			body,
+			params: { user_id },
+		} = Request;
+		if (query.type === 'success') {
+			await DB.save('users', {
+				id: user_id,
+				stripe_connect: 1,
+			});
+			apis.sendPush(user_id, {
+				message:
+					'Your account successfully link with stripe now you will add your product',
+				data: [],
+				notification_code: 10,
+			});
+		}
 		await DB.save('strips_fail_logs', {
 			informations: JSON.stringify({ query, body }),
-			user_id: params.user_id,
+			user_id: user_id,
 			type: 5, // strinp hook log
 		});
 		return {
-			message: 'Hook Successfully done',
+			message: 'Account linked Successfully done',
 			data: [],
 		};
 	},
