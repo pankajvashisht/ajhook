@@ -81,8 +81,8 @@ module.exports = {
 			stripe.accountLinks.create(
 				{
 					account: strip_id,
-					failure_url: `${appURL}apis/v1/stripe-success${user_id}?type=fail`,
-					success_url: `${appURL}apis/v1/stripe-success${user_id}?type=success`,
+					failure_url: `${appURL}apis/v1/stripe-success/${user_id}?type=fail`,
+					success_url: `${appURL}apis/v1/stripe-success/${user_id}?type=success`,
 					type: 'custom_account_verification',
 				},
 				function (err, accountLink) {
