@@ -68,6 +68,7 @@ module.exports = {
 		};
 	},
 	stripeAccountLink: async (Request) => {
+		console.log(Request.body);
 		const {
 			user_id,
 			userInfo: { strip_id = 0 },
