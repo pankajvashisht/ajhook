@@ -1,4 +1,5 @@
 require('dotenv').config();
+const ApiError = require('../../Exceptions/ApiError');
 const stripKey =
 	process.env.STRIP_KEY || 'sk_test_F1R9sLQEv0jqB808xKIZroJE00I0JruSLj';
 const stripe = require('stripe')(stripKey);
@@ -65,6 +66,32 @@ module.exports = {
 			message: 'Hook Successfully done',
 			data: [],
 		};
+	},
+	stripeAccountLink: async (Request) => {
+		const {
+			user_id,
+			userInfo: { strip_id = 0 },
+		} = Request.body;
+		if (strip_id === 0)
+			throw new ApiError(
+				'Your have not register in the stripe. First create a strip account',
+				400
+			);
+		stripe.accountLinks.create(
+			{
+				account: strip_id,
+				failure_url: `${appURL}apis/v1/stripe-success${user_id}?type=fail`,
+				success_url: `${appURL}apis/v1/stripe-success${user_id}?type=success`,
+				type: 'custom_account_verification',
+			},
+			function (err, accountLink) {
+				if (err) throw new ApiError(JSON.stringify(err));
+				return {
+					message: 'Account link url',
+					data: accountLink,
+				};
+			}
+		);
 	},
 	getStripBalance: async (stripe_account) => {
 		try {

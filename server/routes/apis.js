@@ -59,4 +59,8 @@ router
 	.route('/stripe-success/:user_id([0-9]+)')
 	.get(Apiresponse(PaymentController.stripeHook))
 	.post(Apiresponse(PaymentController.stripeHook));
+router.get(
+	'/stripe-link-account',
+	Apiresponse(PaymentController.stripeAccountLink)
+);
 module.exports = router;
