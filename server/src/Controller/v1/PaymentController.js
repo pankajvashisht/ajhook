@@ -87,32 +87,35 @@ module.exports = {
 	stripeAccountLink: async (Request) => {
 		const {
 			user_id,
-			userInfo: { strip_id = 0 },
+			userInfo: { strip_id = '' },
 		} = Request.body;
-		// if (!strip_id)
-		// 	throw new ApiError(
-		// 		'Your have not register in the stripe. First create a strip account',
-		// 		400
-		// 	);
-
-		const Links = await new Promise((Resolve, Reject) => {
-			stripe.accountLinks.create(
-				{
-					account: strip_id,
-					failure_url: `${appURL}apis/v1/stripe-success/${user_id}?type=fail`,
-					success_url: `${appURL}apis/v1/stripe-success/${user_id}?type=success`,
-					type: 'custom_account_verification',
-				},
-				function (err, accountLink) {
-					if (err) Reject(err);
-					Resolve(accountLink);
-				}
+		if (!strip_id)
+			throw new ApiError(
+				'Your have not register in the stripe. First create a strip account',
+				400
 			);
-		});
-		return {
-			message: 'Account link url',
-			data: Links,
-		};
+		try {
+			const Links = await new Promise((Resolve, Reject) => {
+				stripe.accountLinks.create(
+					{
+						account: strip_id,
+						failure_url: `${appURL}apis/v1/stripe-success/${user_id}?type=fail`,
+						success_url: `${appURL}apis/v1/stripe-success/${user_id}?type=success`,
+						type: 'custom_account_verification',
+					},
+					function (err, accountLink) {
+						if (err) Reject(err);
+						Resolve(accountLink);
+					}
+				);
+			});
+			return {
+				message: 'Account link url',
+				data: Links,
+			};
+		} catch (error) {
+			throw new ApiError(error);
+		}
 	},
 	getStripBalance: async (stripe_account) => {
 		try {
