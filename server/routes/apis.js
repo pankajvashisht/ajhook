@@ -63,4 +63,8 @@ router.get(
 	'/stripe-link-account',
 	Apiresponse(PaymentController.stripeAccountLink)
 );
+router.post(
+	'/stripe-secert-key',
+	Apiresponse(PaymentController.createStripeSecert)
+);
 module.exports = router;

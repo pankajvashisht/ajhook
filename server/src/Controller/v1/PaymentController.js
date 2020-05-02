@@ -117,6 +117,25 @@ module.exports = {
 			throw new ApiError(error);
 		}
 	},
+	createStripeSecert: async (Request) => {
+		const { amount = 0 } = Request.body;
+		if (amount === 0) throw new ApiError('Amount field is required', 400);
+		try {
+			const paymentIntent = await stripe.paymentIntents.create({
+				amount,
+				currency: 'usd',
+			});
+			const clientSecret = paymentIntent.client_secret;
+			return {
+				message: 'Stripe Secert Key',
+				data: {
+					secret: clientSecret,
+				},
+			};
+		} catch (err) {
+			throw new ApiError(err);
+		}
+	},
 	getStripBalance: async (stripe_account) => {
 		try {
 			return await stripe.balance.retrieve({
