@@ -23,7 +23,7 @@ router.get('/', function (req, res) {
 });
 
 router.post('/user', userSignup, Apiresponse(user.addUser));
-router.post('/user/login/', Apiresponse(user.loginUser));
+router.post('/user/login', Apiresponse(user.loginUser));
 router.post('/user/verify', Apiresponse(user.verifyOtp));
 router.post('/user/edit/', Apiresponse(user.updateProfile));
 router.post('/change_password', Apiresponse(user.changePassword));
