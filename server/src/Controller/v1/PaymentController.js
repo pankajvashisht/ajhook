@@ -89,11 +89,11 @@ module.exports = {
 			user_id,
 			userInfo: { strip_id = 0 },
 		} = Request.body;
-		if (!strip_id)
-			throw new ApiError(
-				'Your have not register in the stripe. First create a strip account',
-				400
-			);
+		// if (!strip_id)
+		// 	throw new ApiError(
+		// 		'Your have not register in the stripe. First create a strip account',
+		// 		400
+		// 	);
 
 		const Links = await new Promise((Resolve, Reject) => {
 			stripe.accountLinks.create(
