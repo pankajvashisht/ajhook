@@ -89,13 +89,13 @@ module.exports = {
 			user_id,
 			userInfo: { strip_id = 0 },
 		} = Request.body;
-		console.log(strip_id);
-		if (strip_id === 0)
+		if (!strip_id)
 			throw new ApiError(
 				'Your have not register in the stripe. First create a strip account',
 				400
 			);
-		const Links = await new Promise((Resolve) => {
+
+		const Links = await new Promise((Resolve, Reject) => {
 			stripe.accountLinks.create(
 				{
 					account: strip_id,
@@ -104,7 +104,7 @@ module.exports = {
 					type: 'custom_account_verification',
 				},
 				function (err, accountLink) {
-					if (err) throw new ApiError(err);
+					if (err) Reject(err);
 					Resolve(accountLink);
 				}
 			);
