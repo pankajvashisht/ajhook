@@ -89,6 +89,7 @@ module.exports = {
 			user_id,
 			userInfo: { strip_id = 0 },
 		} = Request.body;
+		console.log(strip_id);
 		if (strip_id === 0)
 			throw new ApiError(
 				'Your have not register in the stripe. First create a strip account',
