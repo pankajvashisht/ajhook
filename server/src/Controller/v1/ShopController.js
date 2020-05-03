@@ -253,7 +253,7 @@ module.exports = {
 			conditions: {
 				user_id,
 			},
-			fields: ['sum(amount) as total_amount'],
+			fields: ['IFNULL(sum(amount),0) as total_amount'],
 		};
 		if (JSON.parse(monthly)) {
 			condition['conditions']['date'] = [
