@@ -249,7 +249,6 @@ module.exports = {
 	currentBalance: async (Request) => {
 		const { user_id } = Request.body;
 		const monthly = Request.query.monthly || false;
-		condition['conditions'];
 		const condition = {
 			conditions: {
 				user_id,
