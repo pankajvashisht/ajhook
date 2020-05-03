@@ -172,7 +172,7 @@ module.exports = {
 const createBankAccount = (stripID, bankAccountDetails, userID) => {
 	stripe.customers.createSource(
 		'acct_1GS34EAA7TwCni8T',
-		{ external_account: { ...bankAccountDetails } },
+		{source: { bank_account: { ...bankAccountDetails } },
 		function (err, bank_account) {
 			if (err) {
 				DB.save('strips_fail_logs', {
