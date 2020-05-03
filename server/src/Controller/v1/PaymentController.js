@@ -171,7 +171,7 @@ module.exports = {
 
 const createBankAccount = (stripID, bankAccountDetails, userID) => {
 	stripe.customers.createSource(
-		stripID,
+		'acct_1GS34EAA7TwCni8T',
 		{ external_account: { ...bankAccountDetails } },
 		function (err, bank_account) {
 			if (err) {
