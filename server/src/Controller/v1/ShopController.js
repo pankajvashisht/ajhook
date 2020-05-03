@@ -256,12 +256,10 @@ module.exports = {
 			fields: ['sum(amount) as total_amount'],
 		};
 		if (JSON.parse(monthly)) {
-			condition['conditions'] = {
-				date: [
-					'from_unixtime(created, "%y%m")',
-					`from_unixtime(${app.currentTime}, "%y%d%m")`,
-				],
-			};
+			condition['conditions']['date'] = [
+				'from_unixtime(created, "%y%m")',
+				`from_unixtime(${app.currentTime}, "%y%d%m")`,
+			];
 		}
 		const result = await DB.find('amount_transfers', 'first', condition);
 		return {
