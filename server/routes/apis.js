@@ -41,6 +41,7 @@ router.post('/do-payment', Apiresponse(ShopController.doPayment));
 router.post('/accept-order', Apiresponse(ProductController.OrderAccept));
 router.post('/complete-order', Apiresponse(DriverController.CompleteOrders));
 router.post('/track-driver', Apiresponse(DriverController.TrackDriver));
+router.get('/check-balance', Apiresponse(ShopController.currentBalance));
 router.get(
 	'/product-detail/:product_id([0-9]+)',
 	Apiresponse(ProductController.productDetails)

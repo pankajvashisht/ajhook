@@ -3,7 +3,7 @@ const app = require('../../../libary/CommanMethod');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const { lang } = require('../../../config');
-const PaymentController  = require('./PaymentController');
+const PaymentController = require('./PaymentController');
 const DB = new Db();
 class UserController extends ApiController {
 	constructor() {
@@ -13,13 +13,16 @@ class UserController extends ApiController {
 	}
 
 	async addUser(Request) {
-		
 		const { RequestData } = Request;
 		if (Request.files && Request.files.profile) {
-			RequestData.profile = await app.upload_pic_with_await(Request.files.profile);
+			RequestData.profile = await app.upload_pic_with_await(
+				Request.files.profile
+			);
 		}
 		if (Request.files && Request.files.licence) {
-			RequestData.licence = await app.upload_pic_with_await(Request.files.licence);
+			RequestData.licence = await app.upload_pic_with_await(
+				Request.files.licence
+			);
 		}
 		const user_id = await DB.save('users', RequestData);
 		RequestData.lang = Request.lang;
@@ -33,13 +36,13 @@ class UserController extends ApiController {
 		return {
 			message: lang[Request.lang].signup,
 			data: {
-				authorization_key: RequestData.authorization_key
-			}
+				authorization_key: RequestData.authorization_key,
+			},
 		};
 	}
 	async verifyOtp(req) {
 		let required = {
-			otp: req.body.otp
+			otp: req.body.otp,
 		};
 		let non_required = {};
 		let request_data = await super.vaildation(required, non_required);
@@ -54,7 +57,7 @@ class UserController extends ApiController {
 		}
 		return {
 			message: lang[req.lang].verifyOtp,
-			data: usersInfo
+			data: usersInfo,
 		};
 	}
 
@@ -62,7 +65,7 @@ class UserController extends ApiController {
 		const required = {
 			social_id: req.body.social_id,
 			social_token: req.body.social_token,
-			soical_type: req.body.soical_type
+			soical_type: req.body.soical_type,
 		};
 		const non_required = {
 			device_type: req.body.device_type,
@@ -78,7 +81,7 @@ class UserController extends ApiController {
 			start_time_call: req.body.start_time_call,
 			end_time_call: req.body.end_time_call,
 			centre: req.body.centre,
-			authorization_key: app.createToken()
+			authorization_key: app.createToken(),
 		};
 
 		let request_data = await super.vaildation(required, non_required);
@@ -86,10 +89,10 @@ class UserController extends ApiController {
 			conditions: {
 				or: {
 					email: request_data.email,
-					social_id: request_data.social_id
-				}
+					social_id: request_data.social_id,
+				},
 			},
-			fields: [ 'id' ]
+			fields: ['id'],
 		});
 		if (soical_id) {
 			request_data.id = soical_id.id;
@@ -101,22 +104,22 @@ class UserController extends ApiController {
 		}
 		return {
 			message: 'User login successfully',
-			data: userInfo
+			data: userInfo,
 		};
 	}
 
 	async forgotPassword(req) {
 		let required = {
 			email: req.body.email,
-			otp: app.randomNumber()
+			otp: app.randomNumber(),
 		};
 		let non_required = {};
 		let request_data = await super.vaildation(required, non_required);
 		let user_info = await DB.find('users', 'first', {
 			conditions: {
-				email: request_data.email
+				email: request_data.email,
 			},
-			fields: [ 'id', 'email', 'name' ]
+			fields: ['id', 'email', 'name'],
 		});
 		if (!user_info) throw new ApiError(lang[req.lang].mailNotFound);
 		user_info.otp = request_data.otp;
@@ -129,39 +132,40 @@ class UserController extends ApiController {
 			data: {
 				first_name: user_info.name,
 				last_name: user_info.name,
-				url: appURL + 'users/change_password/' + user_info.forgot_password_hash
-			}
+				url: appURL + 'users/change_password/' + user_info.forgot_password_hash,
+			},
 		};
 		setTimeout(() => {
 			app.send_mail(mail);
 		}, 100);
 		return {
 			message: lang[req.lang].otpSend,
-			data: []
+			data: [],
 		};
 	}
 
 	async loginUser(req) {
 		const required = {
 			email: req.body.email,
-			password: req.body.password
+			password: req.body.password,
 		};
 		const non_required = {
 			device_type: req.body.device_type || 0,
 			device_token: req.body.device_token || '',
 			last_login: app.currentTime,
-			authorization_key: app.createToken()
+			authorization_key: app.createToken(),
 		};
 
 		let request_data = await super.vaildation(required, non_required);
 		let login_details = await DB.find('users', 'first', {
 			conditions: {
-				email: request_data.email
+				email: request_data.email,
 			},
-			fields: [ 'id', 'password', 'status', 'email' ]
+			fields: ['id', 'password', 'status', 'email'],
 		});
 		if (login_details) {
-			if (request_data.password !== login_details.password) throw new ApiError(lang[req.lang].wrongLogin);
+			if (request_data.password !== login_details.password)
+				throw new ApiError(lang[req.lang].wrongLogin);
 			delete login_details.password;
 			request_data.id = login_details.id;
 			await DB.save('users', request_data);
@@ -172,22 +176,22 @@ class UserController extends ApiController {
 			}
 			return {
 				message: lang[req.lang].LoginMessage,
-				data: login_details
+				data: login_details,
 			};
 		}
 		throw new ApiError(lang[req.lang].wrongLogin);
 	}
 	async appInfo() {
-		let app_info = await DB.find('app_informations', 'all');
+		const app_info = await DB.find('app_informations', 'all');
 		return {
 			message: 'App Informations',
-			data: app_info
+			data: app_info,
 		};
 	}
 	async changePassword(req) {
 		let required = {
 			old_password: req.body.old_password,
-			new_password: req.body.new_password
+			new_password: req.body.new_password,
 		};
 		let request_data = await super.vaildation(required, {});
 		const loginInfo = req.body.userInfo;
@@ -198,12 +202,12 @@ class UserController extends ApiController {
 		await DB.save('users', loginInfo);
 		return {
 			message: 'Password change Successfully',
-			data: []
+			data: [],
 		};
 	}
 	async updateProfile(req) {
 		const required = {
-			id: req.body.user_id
+			id: req.body.user_id,
 		};
 		const non_required = {
 			latitude: req.body.latitude,
@@ -214,7 +218,7 @@ class UserController extends ApiController {
 			card_informations: req.body.card_informations,
 			name: req.body.name,
 			is_free: req.body.is_free,
-			is_online: req.body.is_online
+			is_online: req.body.is_online,
 		};
 		const request_data = await super.vaildation(required, non_required);
 		if (req.files && req.files.profile) {
@@ -227,20 +231,20 @@ class UserController extends ApiController {
 		}
 		return {
 			message: 'Profile updated successfully',
-			data: usersinfo
+			data: usersinfo,
 		};
 	}
 
 	async logout(req) {
 		let required = {
-			id: req.body.user_id
+			id: req.body.user_id,
 		};
 		let request_data = await super.vaildation(required, {});
 		request_data.authorization_key = '';
 		await DB.save('users', request_data);
 		return {
 			message: 'User Logout successfully',
-			data: []
+			data: [],
 		};
 	}
 	mails(request_data) {
@@ -251,13 +255,13 @@ class UserController extends ApiController {
 			data: {
 				first_name: request_data.username,
 				last_name: request_data.username,
-				url: appURL + 'users/verify/' + request_data.authorization_key
-			}
+				url: appURL + 'users/verify/' + request_data.authorization_key,
+			},
 		};
 		try {
 			app.sendSMS({
 				to: `${request_data.phone_code}${request_data.phone}`,
-				message: `${request_data.otp} ${lang[request_data.lang].OTP}`
+				message: `${request_data.otp} ${lang[request_data.lang].OTP}`,
 			});
 			app.send_mail(mail);
 			return true;

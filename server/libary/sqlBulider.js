@@ -44,9 +44,23 @@ class Query {
 					if (c === 'or') {
 						for (let a in condition.conditions[c]) {
 							if (its_first === 0) {
-								query += ' `' + table + '`.`' + a + "` = '" + condition.conditions[c][a] + "'";
+								query +=
+									' `' +
+									table +
+									'`.`' +
+									a +
+									"` = '" +
+									condition.conditions[c][a] +
+									"'";
 							} else {
-								query += ' or `' + table + '`.`' + a + "` = '" + condition.conditions[c][a] + "' ";
+								query +=
+									' or `' +
+									table +
+									'`.`' +
+									a +
+									"` = '" +
+									condition.conditions[c][a] +
+									"' ";
 							}
 							its_first++;
 						}
@@ -122,6 +136,8 @@ class Query {
 				const limit = condition.limit;
 				if (Array.isArray(limit)) {
 					query += ' limit ' + limit[0] + ', ' + limit[1];
+				} else if (type === 'first') {
+					query += 'limit 1';
 				} else {
 					query += ' limit ' + limit;
 				}
@@ -139,7 +155,7 @@ class Query {
 
 	async findall(query) {
 		query = String(query);
-		const [ row ] = await this.db.db_connect.query(query);
+		const [row] = await this.db.db_connect.query(query);
 		return row;
 	}
 
@@ -148,7 +164,7 @@ class Query {
 		const query = String(qry);
 		try {
 			let result = new Promise((resolve, reject) => {
-				this.db.db_connect.query(query, function(error, results) {
+				this.db.db_connect.query(query, function (error, results) {
 					if (error) reject(error);
 					if (results) {
 						resolve(results);
@@ -171,7 +187,7 @@ class Query {
 	async Query(query, type) {
 		try {
 			query = String(query);
-			const [ rows ] = await this.db.db_connect.query(query);
+			const [rows] = await this.db.db_connect.query(query);
 			if (rows) {
 				if (type === 'select') {
 					return rows;
@@ -199,7 +215,7 @@ class Query {
 
 		let get_scheme = 'SHOW COLUMNS FROM ' + table_name;
 		let row = new Promise((R) => {
-			this.db.db_connect.query(String(get_scheme), function(error, result) {
+			this.db.db_connect.query(String(get_scheme), function (error, result) {
 				if (error) throw error;
 				R(result);
 			});
@@ -230,10 +246,10 @@ class Query {
 		}
 		try {
 			const result = new Promise((resolve, reject) => {
-				this.db.db_connect.query(query, value, function(error, result) {
+				this.db.db_connect.query(query, value, function (error, result) {
 					if (error) reject(error);
 					if (result) {
-						let id = update ? object.id : result.insertId;
+						const id = update ? object.id : result.insertId;
 						resolve(id);
 					}
 				});
