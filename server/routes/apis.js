@@ -57,9 +57,9 @@ router
 	.get(Apiresponse(ShopController.getReview))
 	.post(Apiresponse(ShopController.giveRating));
 router
-	.route('/stripe-success/:user_id([0-9]+)')
-	.get(Apiresponse(PaymentController.stripeHook))
-	.post(Apiresponse(PaymentController.stripeHook));
+	.route('/stripe-integration/:user_id([0-9]+)')
+	.get(PaymentController.stripeHook)
+	.post(PaymentController.stripeHook);
 router.get(
 	'/stripe-link-account',
 	Apiresponse(PaymentController.stripeAccountLink)

@@ -56,33 +56,29 @@ module.exports = {
 			return false;
 		}
 	},
-	stripeHook: async (Request) => {
+	stripeHook: async (Request, Response) => {
 		const {
 			query,
 			body,
 			params: { user_id },
 		} = Request;
 		if (query.type === 'success') {
-			await DB.save('users', {
-				id: user_id,
-				stripe_connect: 1,
-			});
-			apis.sendPush(user_id, {
-				message:
-					'Your account successfully link with stripe now you will add your product',
-				data: [],
-				notification_code: 10,
-			});
+			if (Request.method == 'POST') {
+				return updateAccount(user_id, Response, body.token);
+			}
+			return Response.render('AddBankDetails', { user_id });
 		}
 		await DB.save('strips_fail_logs', {
 			informations: JSON.stringify({ query, body }),
 			user_id: user_id,
 			type: 5, // strinp hook log
 		});
-		return {
-			message: 'Account linked Successfully done',
-			data: [],
-		};
+		return Response.render('error', {
+			message: 'Something went wrong try later',
+			error: {
+				status: 400,
+			},
+		});
 	},
 	stripeAccountLink: async (Request) => {
 		const {
@@ -99,8 +95,8 @@ module.exports = {
 				stripe.accountLinks.create(
 					{
 						account: strip_id,
-						failure_url: `${appURL}apis/v1/stripe-success/${user_id}?type=fail`,
-						success_url: `${appURL}apis/v1/stripe-success/${user_id}?type=success`,
+						failure_url: `${appURL}apis/v1/stripe-integration/${user_id}?type=fail`,
+						success_url: `${appURL}apis/v1/stripe-integration/${user_id}?type=success`,
 						type: 'custom_account_verification',
 					},
 					function (err, accountLink) {
@@ -169,32 +165,50 @@ module.exports = {
 	},
 };
 
-const createBankAccount = async (stripID, bankAccountDetails, userID) => {
+const updateAccount = async (user_id, Response, token) => {
+	const userInfo = await DB.find('users', 'first', {
+		conditions: {
+			id: user_id,
+		},
+	});
 	try {
-		const token = await stripe.createToken('bank_account', {
-			...bankAccountDetails,
+		await createBankAccount(userInfo.strip_id, token);
+		await DB.save('users', {
+			id: user_id,
+			stripe_connect: 1,
 		});
-		console.log(token);
-		stripe.customers.createSource(
-			stripID,
-			{ source: token.token.id },
-			function (err, bank_account) {
-				if (err) {
-					DB.save('strips_fail_logs', {
-						informations: JSON.stringify(err),
-						user_id: userID,
-						type: 1,
-					});
-				} else {
-					DB.save('users', {
-						id: userID,
-						strinp_bank_account_id: bank_account.id,
-						bank_account,
-					});
-				}
-			}
-		);
+		apis.sendPush(user_id, {
+			message:
+				'Your account successfully link with stripe now you will add your product',
+			data: [],
+			notification_code: 10,
+		});
 	} catch (err) {
-		console.log(err);
+		return Response.render('error', {
+			message: 'Something went wrong try later',
+			error: {
+				status: 400,
+			},
+		});
 	}
+};
+const createBankAccount = async (stripID, token, userID) => {
+	stripe.customers.createSource(stripID, { source: token }, function (
+		err,
+		bank_account
+	) {
+		if (err) {
+			DB.save('strips_fail_logs', {
+				informations: JSON.stringify(err),
+				user_id: userID,
+				type: 1,
+			});
+		} else {
+			DB.save('users', {
+				id: userID,
+				strinp_bank_account_id: bank_account.id,
+				bank_account,
+			});
+		}
+	});
 };
