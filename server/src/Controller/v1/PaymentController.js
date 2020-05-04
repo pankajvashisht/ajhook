@@ -153,7 +153,7 @@ module.exports = {
 					amount,
 					currency: 'usd',
 					destination,
-					transfer_group: orderID,
+					transfer_group: 'pm_1GeR6TB9dxxkqRyN0bSW50V2',
 				},
 				function (err, transfer) {
 					if (err) {
