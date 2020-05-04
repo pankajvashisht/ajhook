@@ -184,6 +184,7 @@ module.exports = {
 		let offset = Request.params.offset || 1;
 		const limit = Request.query.limit || 10;
 		const order_status = Request.query.order_status || 0;
+		const monthly = Request.query.monthly || false;
 		offset = (offset - 1) * limit;
 		const conditions = {};
 		if (parseInt(order_status) === 0) {
@@ -228,6 +229,12 @@ module.exports = {
 			],
 			orderBy: ['orders.id desc'],
 		};
+		if (JSON.parse(monthly)) {
+			condition['conditions']['date'] = [
+				'from_unixtime(created, "%y%m")',
+				`from_unixtime(${app.currentTime}, "%y%d%m")`,
+			];
+		}
 		const result = await DB.find('orders', 'all', condition);
 		const final = result.map((value) => {
 			if (value.product_details) {

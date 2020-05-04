@@ -169,24 +169,32 @@ module.exports = {
 	},
 };
 
-const createBankAccount = (stripID, bankAccountDetails, userID) => {
-	stripe.customers.createSource(
-		'acct_1GS34EAA7TwCni8T',
-		{ source: { bank_account: { ...bankAccountDetails } } },
-		function (err, bank_account) {
-			if (err) {
-				DB.save('strips_fail_logs', {
-					informations: JSON.stringify(err),
-					user_id: userID,
-					type: 1,
-				});
-			} else {
-				DB.save('users', {
-					id: userID,
-					strinp_bank_account_id: bank_account.id,
-					bank_account,
-				});
+const createBankAccount = async (stripID, bankAccountDetails, userID) => {
+	try {
+		const token = await stripe.createToken('bank_account', {
+			...bankAccountDetails,
+		});
+		console.log(token);
+		stripe.customers.createSource(
+			stripID,
+			{ source: token.token.id },
+			function (err, bank_account) {
+				if (err) {
+					DB.save('strips_fail_logs', {
+						informations: JSON.stringify(err),
+						user_id: userID,
+						type: 1,
+					});
+				} else {
+					DB.save('users', {
+						id: userID,
+						strinp_bank_account_id: bank_account.id,
+						bank_account,
+					});
+				}
 			}
-		}
-	);
+		);
+	} catch (err) {
+		console.log(err);
+	}
 };
