@@ -1,8 +1,9 @@
 const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
-let apis = new ApiController();
-let DB = new Db();
+const PaymentController = require('./PaymentController');
+const apis = new ApiController();
+const DB = new Db();
 
 module.exports = {
 	CompleteOrders: async (Request) => {
@@ -30,7 +31,7 @@ module.exports = {
 			message = 'Order has been completed';
 			pushMessage = message;
 			setTimeout(() => {
-				apis.tranferMoney(10, order_info, 3);
+				PaymentController.tranferMoney(10, order_info, 3);
 			}, 100);
 		}
 		setTimeout(() => {
