@@ -197,9 +197,9 @@ const createBankAccount = async (stripID, bankAccountDetails, userID) => {
 		country: 'US',
 		currency: 'usd',
 		account_holder_type: 'individual',
-		bankAccountDetails,
+		...JSON.parse(bankAccountDetails),
 	};
-	console.log(bank_account, bankAccountDetails);
+	console.log(bank_account);
 	stripe.tokens.create(
 		{
 			bank_account,
