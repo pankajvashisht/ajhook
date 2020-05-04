@@ -225,7 +225,7 @@ const createBankAccount = async (stripID, bankAccountDetails, userID) => {
 						} else {
 							DB.save('users', {
 								id: userID,
-								strinp_bank_account_id: bank_account.id,
+								stripe_bank_account_id: bank_account.id,
 								bank_account: JSON.stringify(bank_account),
 							});
 						}

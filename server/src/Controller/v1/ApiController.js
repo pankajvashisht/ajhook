@@ -167,6 +167,7 @@ class ApiController {
 				'strip_id',
 				'strip_info',
 				'stripe_connect',
+				'stripe_bank_account_id',
 			],
 		});
 		if (result.card_informations) {

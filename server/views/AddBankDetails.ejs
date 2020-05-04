@@ -10,125 +10,35 @@
                 <div class="col-sm-2 sidenav">
                 </div>
                 <div class="col-sm-8 text-left" style="display: flex;justify-content: center; background-color: #f1d37a;"> 
-				<div><h1>Add Your Bank Details</h1>
+				<div><h1>Your Amount Link Successfully Now You will use our Services</h1>
 					<div>
 					<img
-					style="display: flex;justify-content: center;"
 										src="<%= appURL %>images/logo.png"
 										alt="Logo"
 										border="0"
 										width="48"
 										style="
-											display: block;
+											
 											width: 48px;
 											max-width: 48px;
 											min-width: 48px;
+											display: flex;justify-content: center;
 										"
 									/>
+
+									<img
+									src="<%= appURL %>images/success.gif"
+									alt="Logo"
+									border="0"
+									width="48"
+									style="
+
+										display: flex;justify-content: center;
+									"
+								/>				
 				</div>
-			<form action="//httpbin.org/post" method="POST" >
-				<input type="hidden" name="token" />
-				<div class="form-group">
-					<label for="country">Country</label>
-					<select class="form-control" id="country">
-						<option seletced="true" value="US">United States</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label for="currency">Currency</label>
-					<select class="form-control" id="currency">
-						<option value="USD">US Dollar</option>
-					</select>
-				</div>
-				<div class="form-group">
-					<label for="routing-number">Routing Number</label>
-					<input class="form-control" type="text" id="routing-number" value="" />
-				</div>
-				<div class="form-group">
-					<label for="account-number">Account Number</label>
-					<input class="form-control" type="text" id="account-number" required value="" />
-				</div>
-				<div class="form-group">
-					<label for="account-holder-name">Account Holder Name</label>
-                    <input
-                    class="form-control"
-						type="text"
-						id="account-holder-name"
-						required
-						value=""
-					/>
-				</div>
-				<div class="form-group">
-					<label for="account-holder-type">Account Holder Type</label>
-					<select class="form-control" id="account-holder-type">
-						<option value="individual">Individual</option>
-						<option value="company">Company</option>
-					</select>
-				</div>
-				<button class="btn btn-success" type="submit">Submit</button>
-				<div class="outcome">
-					<div class="error"></div>
-					<div class="success">
-						Success! Your Stripe token is <span class="token"></span>
-					</div>
-				</div>
-            </form>
+			
         </div>
 		</div>
 	</body>
-	<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
-	<script>
-		const stripe = Stripe('pk_test_YVRhGAXByWeiogfFt6XqGoJ300MdinDD87');
-
-		function setOutcome(result) {
-			var successElement = document.querySelector('.success');
-			var errorElement = document.querySelector('.error');
-			successElement.classList.remove('visible');
-			errorElement.classList.remove('visible');
-
-			if (result.token) {
-				// In this example, we're simply displaying the token
-				successElement.querySelector('.token').textContent = result.token.id;
-				fetch('', {
-					method: 'POST',
-					body: {token: result.token.id},
-					keepalive: true
-  				}).then((data) => {
-					console.log(data)
-				  }).catch(err => {
-					  console.log(err);
-				  });
-				successElement.classList.add('visible');
-
-				// In a real integration, you'd submit the form with the token to your backend server
-				//var form = document.querySelector('form');
-				//form.querySelector('input[name="token"]').setAttribute('value', result.token.id);
-				//form.submit();
-			} else {
-				errorElement.textContent = result.error.message;
-				errorElement.classList.add('visible');
-			}
-		}
-
-		document.querySelector('form').addEventListener('submit', function (e) {
-			e.preventDefault();
-
-			var bankAccountParams = {
-				country: document.getElementById('country').value,
-				currency: document.getElementById('currency').value,
-				account_number: document.getElementById('account-number').value,
-				account_holder_name: document.getElementById('account-holder-name')
-					.value,
-				account_holder_type: document.getElementById('account-holder-type')
-					.value,
-			};
-			if (document.getElementById('routing-number').value != '') {
-				bankAccountParams['routing_number'] = document.getElementById(
-					'routing-number'
-				).value;
-			}
-
-			stripe.createToken('bank_account', bankAccountParams).then(setOutcome);
-		});
-	</script>
-</html>
+	</html>
