@@ -6,7 +6,7 @@ const stripKey =
 const stripe = require('stripe')(stripKey);
 const Db = require('../../../libary/sqlBulider');
 const DB = new Db();
-let apis = new ApiController();
+const apis = new ApiController();
 module.exports = {
 	createAccount: async (user_id, email, bankAccountDetails = null) => {
 		stripe.account.create(

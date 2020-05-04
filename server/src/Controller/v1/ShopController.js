@@ -2,7 +2,7 @@ const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const app = require('../../../libary/CommanMethod');
-let apis = new ApiController();
+const apis = new ApiController();
 let DB = new Db();
 
 module.exports = {
