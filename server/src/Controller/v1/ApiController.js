@@ -142,14 +142,13 @@ class ApiController {
 	async tranferMoney(amount, orderDetails, user_type) {
 		const { shop_id, driver_id, id } = orderDetails;
 		const user_id = user_type === 2 ? shop_id : driver_id;
-		const userInfo = DB.find('users', 'first', {
+		const userInfo = await DB.find('users', 'first', {
 			conditions: {
 				user_type,
 				id: user_id,
 			},
 			fields: ['strip_id'],
 		});
-		console.log(userInfo);
 		PaymentController.transfersAmount(userInfo.strip_id, amount, id)
 			.then((data) => {
 				const updateOrder = {
