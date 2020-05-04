@@ -193,14 +193,16 @@ const updateAccount = async (user_id, Response, token) => {
 	}
 };
 const createBankAccount = async (stripID, bankAccountDetails, userID) => {
+	const bank_account = {
+		country: 'US',
+		currency: 'usd',
+		account_holder_type: 'individual',
+		...bankAccountDetails,
+	};
+	console.log(bank_account);
 	stripe.tokens.create(
 		{
-			bank_account: {
-				country: 'US',
-				currency: 'usd',
-				account_holder_type: 'individual',
-				...bankAccountDetails,
-			},
+			bank_account,
 		},
 		function (err, token) {
 			if (err) {
