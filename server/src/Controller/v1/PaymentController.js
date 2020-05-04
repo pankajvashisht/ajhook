@@ -123,7 +123,7 @@ module.exports = {
 		}
 	},
 	createStripeSecert: async (Request) => {
-		const { amount = 0, order_id, stripe_id } = Request.body;
+		const { amount = 0, order_id, shop_stripe_id } = Request.body;
 		if (amount === 0) throw new ApiError('Amount field is required', 400);
 		try {
 			const paymentIntent = await stripe.paymentIntents.create({
@@ -131,7 +131,7 @@ module.exports = {
 				currency: 'usd',
 				transfer_group: order_id,
 				transfer_data: {
-					destination: stripe_id,
+					destination: shop_stripe_id,
 				},
 			});
 			const clientSecret = paymentIntent.client_secret;
