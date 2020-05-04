@@ -192,23 +192,46 @@ const updateAccount = async (user_id, Response, token) => {
 		});
 	}
 };
-const createBankAccount = async (stripID, token, userID) => {
-	stripe.customers.createSource(stripID, { source: token }, function (
-		err,
-		bank_account
-	) {
-		if (err) {
-			DB.save('strips_fail_logs', {
-				informations: JSON.stringify(err),
-				user_id: userID,
-				type: 1,
-			});
-		} else {
-			DB.save('users', {
-				id: userID,
-				strinp_bank_account_id: bank_account.id,
-				bank_account,
-			});
+const createBankAccount = async (stripID, bankAccountDetails, userID) => {
+	stripe.tokens.create(
+		{
+			bank_account: {
+				country: 'US',
+				currency: 'usd',
+				account_holder_name: 'Jenny Rosen',
+				account_holder_type: 'individual',
+				routing_number: '110000000',
+				account_number: '000123456789',
+			},
+		},
+		function (err, token) {
+			if (err) {
+				DB.save('strips_fail_logs', {
+					informations: JSON.stringify(err),
+					user_id: userID,
+					type: 3,
+				});
+			} else {
+				console.log(token);
+				stripe.customers.createSource(stripID, { source: token.id }, function (
+					err,
+					bank_account
+				) {
+					if (err) {
+						DB.save('strips_fail_logs', {
+							informations: JSON.stringify(err),
+							user_id: userID,
+							type: 1,
+						});
+					} else {
+						DB.save('users', {
+							id: userID,
+							strinp_bank_account_id: bank_account.id,
+							bank_account,
+						});
+					}
+				});
+			}
 		}
-	});
+	);
 };
