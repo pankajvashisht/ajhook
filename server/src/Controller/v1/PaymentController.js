@@ -1,12 +1,10 @@
 require('dotenv').config();
-const ApiController = require('./ApiController');
 const ApiError = require('../../Exceptions/ApiError');
 const stripKey =
 	process.env.STRIP_KEY || 'sk_test_F1R9sLQEv0jqB808xKIZroJE00I0JruSLj';
 const stripe = require('stripe')(stripKey);
 const Db = require('../../../libary/sqlBulider');
 const DB = new Db();
-const apis = new ApiController();
 module.exports = {
 	createAccount: async (user_id, email, bankAccountDetails = null) => {
 		stripe.account.create(
@@ -67,12 +65,12 @@ module.exports = {
 				id: user_id,
 				stripe_connect: 1,
 			});
-			apis.sendPush(user_id, {
-				message:
-					'Your account successfully link with stripe now you will add your product',
-				data: [],
-				notification_code: 10,
-			});
+			// apis.sendPush(user_id, {
+			// 	message:
+			// 		'Your account successfully link with stripe now you will add your product',
+			// 	data: [],
+			// 	notification_code: 10,
+			// });
 			return Response.render('AddBankDetails', { user_id });
 		}
 		await DB.save('strips_fail_logs', {
@@ -86,50 +84,6 @@ module.exports = {
 				status: 400,
 			},
 		});
-	},
-	tranferMoney: async (amount, orderDetails, user_type) => {
-		const { shop_id, driver_id, id } = orderDetails;
-		const user_id = user_type === 2 ? shop_id : driver_id;
-		const userInfo = DB.find('users', 'first', {
-			conditions: {
-				user_type,
-				id: user_id,
-			},
-			fields: ['strip_id'],
-		});
-		this.transfersAmount(userInfo.strip_id, amount, id)
-			.then((data) => {
-				const updateOrder = {
-					id,
-				};
-				if (user_type === 2) {
-					updateOrder['shop_money'] = amount;
-				} else {
-					updateOrder['driver_money'] = amount;
-				}
-				DB.save('orders', {
-					id,
-					updateOrder,
-				});
-				DB.save('amount_transfers', {
-					user_id,
-					amount,
-					checkout_details: JSON.stringify(data),
-					order_id: id,
-					user_type,
-					checkout_status: 1,
-				});
-			})
-			.catch((err) => {
-				DB.save('amount_transfers', {
-					user_id,
-					amount,
-					order_id: id,
-					user_type,
-					checkout_details: JSON.stringify(err),
-					checkout_status: 0,
-				});
-			});
 	},
 	stripeAccountLink: async (Request) => {
 		const {

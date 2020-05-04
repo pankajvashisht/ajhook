@@ -2,9 +2,8 @@ const ApiController = require('./ApiController');
 const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const app = require('../../../libary/CommanMethod');
-const PaymentController = require('./PaymentController');
 const apis = new ApiController();
-let DB = new Db();
+const DB = new Db();
 
 module.exports = {
 	getShop: async (Request) => {
@@ -149,7 +148,7 @@ module.exports = {
 		setTimeout(() => {
 			const { price } = result;
 			const shopAmount = price - (price / 100) * 10;
-			PaymentController.tranferMoney(shopAmount, result, 2);
+			apis.tranferMoney(shopAmount, result, 2);
 		}, 100);
 		RequestData.booking_id = await DB.save('payments', RequestData);
 		return {
