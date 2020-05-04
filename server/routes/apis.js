@@ -26,6 +26,7 @@ router.post('/user', userSignup, Apiresponse(user.addUser));
 router.post('/user/login', Apiresponse(user.loginUser));
 router.post('/user/verify', Apiresponse(user.verifyOtp));
 router.post('/user/edit/', Apiresponse(user.updateProfile));
+router.put('/user/bank-account-update', Apiresponse(user.updateBankAccount));
 router.post('/change_password', Apiresponse(user.changePassword));
 router.post('/forgot-password', Apiresponse(user.forgotPassword));
 router.post('/logout', Apiresponse(user.logout));

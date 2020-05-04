@@ -234,6 +234,34 @@ class UserController extends ApiController {
 			data: usersinfo,
 		};
 	}
+	async updateBankAccount(Request) {
+		const required = {
+			routing_number: Request.body.routing_number,
+			account_number: Request.body.routing_number,
+			account_holder_name: Request.body.account_holder_name,
+		};
+		const requestData = await super.vaildation(required, {});
+		const { routing_number, account_number, account_holder_name } = requestData;
+		const { id, strip_id, stripe_bank_account_id } = Request.body.userInfo;
+		await PaymentController.updateBank({
+			bankDetails: {
+				routing_number,
+				account_number,
+				account_holder_name,
+			},
+			strip_id,
+			stripe_bank_account_id,
+			userID: id,
+		});
+		const usersinfo = await super.userDetails(id);
+		if (usersinfo.profile.length > 0) {
+			usersinfo.profile = appURL + 'uploads/' + usersinfo.profile;
+		}
+		return {
+			message: 'Bank account details Updated',
+			data: usersinfo,
+		};
+	}
 
 	async logout(req) {
 		let required = {

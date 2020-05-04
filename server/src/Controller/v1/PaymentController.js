@@ -28,7 +28,11 @@ module.exports = {
 						strip_info: JSON.stringify(account),
 					});
 					if (bankAccountDetails) {
-						createBankAccount(account.id, bankAccountDetails, user_id);
+						createBankAccount(
+							account.id,
+							JSON.parse(bankAccountDetails),
+							user_id
+						);
 					}
 				}
 			}
@@ -119,12 +123,13 @@ module.exports = {
 		}
 	},
 	createStripeSecert: async (Request) => {
-		const { amount = 0 } = Request.body;
+		const { amount = 0, order_id, shop_id } = Request.body;
 		if (amount === 0) throw new ApiError('Amount field is required', 400);
 		try {
 			const paymentIntent = await stripe.paymentIntents.create({
 				amount,
 				currency: 'usd',
+				transfer_group: order_id,
 			});
 			const clientSecret = paymentIntent.client_secret;
 			return {
@@ -146,6 +151,34 @@ module.exports = {
 			return false;
 		}
 	},
+	updateBank: async ({
+		bankDetails,
+		strip_id,
+		stripe_bank_account_id,
+		userID,
+	}) => {
+		try {
+			await createBankAccount(strip_id, bankDetails, userID);
+			if (stripe_bank_account_id) {
+				await new Promise((Resolve, Reject) => {
+					stripe.accounts.deleteExternalAccount(
+						strip_id,
+						stripe_bank_account_id,
+						function (err, confirmation) {
+							if (err) {
+								Reject(err);
+							} else {
+								Resolve(confirmation);
+							}
+						}
+					);
+				});
+			}
+			return true;
+		} catch (err) {
+			throw new ApiError(err, 400);
+		}
+	},
 	transfersAmount: (destination, amount, orderID) => {
 		return new Promise((Resolved, Reject) => {
 			stripe.transfers.create(
@@ -153,7 +186,7 @@ module.exports = {
 					amount,
 					currency: 'usd',
 					destination,
-					transfer_group: 'pm_1GeR6TB9dxxkqRyN0bSW50V2',
+					transfer_group: orderID,
 				},
 				function (err, transfer) {
 					if (err) {
@@ -176,40 +209,45 @@ const createBankAccount = async (stripID, bankAccountDetails, userID) => {
 		country: 'US',
 		currency: 'usd',
 		account_holder_type: 'individual',
-		...JSON.parse(bankAccountDetails),
+		...bankAccountDetails,
 	};
-	stripe.tokens.create(
-		{
-			bank_account,
-		},
-		function (err, token) {
-			if (err) {
-				DB.save('strips_fail_logs', {
-					informations: JSON.stringify(err),
-					user_id: userID,
-					type: 3,
-				});
-			} else {
-				stripe.accounts.createExternalAccount(
-					stripID,
-					{ external_account: token.id },
-					function (err, bank_account) {
-						if (err) {
-							DB.save('strips_fail_logs', {
-								informations: JSON.stringify(err),
-								user_id: userID,
-								type: 1,
-							});
-						} else {
-							DB.save('users', {
-								id: userID,
-								stripe_bank_account_id: bank_account.id,
-								bank_account: JSON.stringify(bank_account),
-							});
+	return new Promise((Resolve, reject) => {
+		stripe.tokens.create(
+			{
+				bank_account,
+			},
+			function (err, token) {
+				if (err) {
+					DB.save('strips_fail_logs', {
+						informations: JSON.stringify(err),
+						user_id: userID,
+						type: 3,
+					});
+					reject(err);
+				} else {
+					stripe.accounts.createExternalAccount(
+						stripID,
+						{ external_account: token.id },
+						function (err, bank_account) {
+							if (err) {
+								DB.save('strips_fail_logs', {
+									informations: JSON.stringify(err),
+									user_id: userID,
+									type: 1,
+								});
+								reject(err);
+							} else {
+								DB.save('users', {
+									id: userID,
+									stripe_bank_account_id: bank_account.id,
+									bank_account: JSON.stringify(bank_account),
+								});
+								Resolve(true);
+							}
 						}
-					}
-				);
+					);
+				}
 			}
-		}
-	);
+		);
+	});
 };
