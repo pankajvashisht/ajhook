@@ -63,9 +63,16 @@ module.exports = {
 			params: { user_id },
 		} = Request;
 		if (query.type === 'success') {
-			if (Request.method == 'POST') {
-				return updateAccount(user_id, Response, body.token);
-			}
+			await DB.save('users', {
+				id: user_id,
+				stripe_connect: 1,
+			});
+			apis.sendPush(user_id, {
+				message:
+					'Your account successfully link with stripe now you will add your product',
+				data: [],
+				notification_code: 10,
+			});
 			return Response.render('AddBankDetails', { user_id });
 		}
 		await DB.save('strips_fail_logs', {
