@@ -149,6 +149,7 @@ class ApiController {
 			},
 			fields: ['strip_id'],
 		});
+		console.log(userInfo.strip_id);
 		PaymentController.transfersAmount(userInfo.strip_id, amount, id)
 			.then((data) => {
 				const updateOrder = {
