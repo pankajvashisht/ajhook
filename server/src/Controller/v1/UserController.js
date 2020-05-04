@@ -237,7 +237,7 @@ class UserController extends ApiController {
 	async updateBankAccount(Request) {
 		const required = {
 			routing_number: Request.body.routing_number,
-			account_number: Request.body.routing_number,
+			account_number: Request.body.account_number,
 			account_holder_name: Request.body.account_holder_name,
 		};
 		const requestData = await super.vaildation(required, {});
