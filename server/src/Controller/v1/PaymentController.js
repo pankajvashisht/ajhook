@@ -213,25 +213,26 @@ const createBankAccount = async (stripID, bankAccountDetails, userID) => {
 				});
 			} else {
 				console.log(token.id, stripID);
-				stripe.customers.createSource(stripID, { source: token.id }, function (
-					err,
-					bank_account
-				) {
-					if (err) {
-						console.log(err);
-						DB.save('strips_fail_logs', {
-							informations: JSON.stringify(err),
-							user_id: userID,
-							type: 1,
-						});
-					} else {
-						DB.save('users', {
-							id: userID,
-							strinp_bank_account_id: bank_account.id,
-							bank_account,
-						});
+				stripe.accounts.createExternalAccount(
+					stripID,
+					{ external_account: token.id },
+					function (err, bank_account) {
+						if (err) {
+							console.log(err);
+							DB.save('strips_fail_logs', {
+								informations: JSON.stringify(err),
+								user_id: userID,
+								type: 1,
+							});
+						} else {
+							DB.save('users', {
+								id: userID,
+								strinp_bank_account_id: bank_account.id,
+								bank_account,
+							});
+						}
 					}
-				});
+				);
 			}
 		}
 	);
