@@ -211,6 +211,7 @@ const createBankAccount = async (stripID, bankAccountDetails, userID) => {
 		account_holder_type: 'individual',
 		...bankAccountDetails,
 	};
+	console.log(bank_account);
 	return new Promise((Resolve, reject) => {
 		stripe.tokens.create(
 			{
