@@ -148,7 +148,7 @@ module.exports = {
 		setTimeout(() => {
 			const { price } = result;
 			const shopAmount = price - (price / 100) * 10;
-			apis.tranferMoney(shopAmount, result, 2);
+			apis.tranferMoney(parseInt(shopAmount), result, 2);
 		}, 100);
 		RequestData.booking_id = await DB.save('payments', RequestData);
 		return {
