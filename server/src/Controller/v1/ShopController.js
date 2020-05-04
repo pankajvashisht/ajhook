@@ -103,6 +103,7 @@ module.exports = {
 		});
 		if (!product) throw new ApiError('Invaild product id', 422);
 		RequestData.shop_id = product.user_id;
+		RequestData.shop_stripe_id = product.strip_id;
 		if (product.stock === 0 && product.stock < RequestData.quantity)
 			throw new ApiError('Product out of stocks', 422);
 		RequestData.product_details = JSON.stringify(product);
