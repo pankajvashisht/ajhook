@@ -212,12 +212,13 @@ const createBankAccount = async (stripID, bankAccountDetails, userID) => {
 					type: 3,
 				});
 			} else {
-				console.log(token);
+				console.log(token.id, stripID);
 				stripe.customers.createSource(stripID, { source: token.id }, function (
 					err,
 					bank_account
 				) {
 					if (err) {
+						console.log(err);
 						DB.save('strips_fail_logs', {
 							informations: JSON.stringify(err),
 							user_id: userID,
