@@ -198,10 +198,8 @@ const createBankAccount = async (stripID, bankAccountDetails, userID) => {
 			bank_account: {
 				country: 'US',
 				currency: 'usd',
-				account_holder_name: 'Jenny Rosen',
 				account_holder_type: 'individual',
-				routing_number: '110000000',
-				account_number: '000123456789',
+				...bankAccountDetails,
 			},
 		},
 		function (err, token) {
@@ -212,13 +210,11 @@ const createBankAccount = async (stripID, bankAccountDetails, userID) => {
 					type: 3,
 				});
 			} else {
-				console.log(token.id, stripID);
 				stripe.accounts.createExternalAccount(
 					stripID,
 					{ external_account: token.id },
 					function (err, bank_account) {
 						if (err) {
-							console.log(err);
 							DB.save('strips_fail_logs', {
 								informations: JSON.stringify(err),
 								user_id: userID,
@@ -228,7 +224,7 @@ const createBankAccount = async (stripID, bankAccountDetails, userID) => {
 							DB.save('users', {
 								id: userID,
 								strinp_bank_account_id: bank_account.id,
-								bank_account,
+								bank_account: JSON.stringify(bank_account),
 							});
 						}
 					}
