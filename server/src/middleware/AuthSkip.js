@@ -3,7 +3,7 @@ const missingRoutes = {
 	'forgot-password': 'POST',
 	'user/login': 'POST',
 	user: 'POST',
-	'stripe-success': 'ALL',
+	'stripe-integration': 'ALL',
 	'social-login': 'POST',
 };
 const AuthSkip = (Req, res, next) => {
