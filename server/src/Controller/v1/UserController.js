@@ -253,6 +253,14 @@ class UserController extends ApiController {
 			stripe_bank_account_id,
 			userID: id,
 		});
+		await DB.save('users', {
+			id,
+			card_informations: JSON.stringify({
+				routing_number,
+				account_number,
+				account_holder_name,
+			}),
+		});
 		const usersinfo = await super.userDetails(id);
 		if (usersinfo.profile.length > 0) {
 			usersinfo.profile = appURL + 'uploads/' + usersinfo.profile;
