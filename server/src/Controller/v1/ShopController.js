@@ -263,6 +263,9 @@ module.exports = {
 	currentBalance: async (Request) => {
 		const { user_id } = Request.body;
 		const monthly = Request.query.monthly || false;
+		let offset = Request.params.offset || 1;
+		const limit = Request.query.limit || 10;
+		offset = (offset - 1) * limit;
 		const condition = {
 			conditions: {
 				user_id,
@@ -276,9 +279,20 @@ module.exports = {
 			];
 		}
 		const result = await DB.find('amount_transfers', 'first', condition);
+		condition['fields'] = '*';
+		const final = await DB.find('amount_transfers', 'all', condition);
 		return {
 			message: 'Your total balance',
-			data: result,
+			data: {
+				pagination: await apis.Paginations(
+					'amount_transfers',
+					condition,
+					offset,
+					limit
+				),
+				total_balance: result,
+				result: final,
+			},
 		};
 	},
 	orderDetails: async (Request) => {
