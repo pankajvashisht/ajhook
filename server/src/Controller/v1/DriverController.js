@@ -29,6 +29,9 @@ module.exports = {
 			});
 			message = 'Order has been completed';
 			pushMessage = message;
+			setTimeout(() => {
+				apis.tranferMoney(10, order_info, 3);
+			}, 100);
 		}
 		setTimeout(() => {
 			apis.sendPush(order_info.user_id, {

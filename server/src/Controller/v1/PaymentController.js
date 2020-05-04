@@ -148,56 +148,30 @@ module.exports = {
 			return false;
 		}
 	},
-	transfersAmount: async (destination, amount, orderID) => {
-		stripe.transfers.create(
-			{
-				amount,
-				currency: 'usd',
-				destination,
-				transfer_group: orderID,
-			},
-			function (err, transfer) {
-				if (err) {
-					DB.save('strips_fail_logs', {
-						informations: JSON.stringify(err),
-						user_id: orderID,
-						type: 0,
-					});
-					return false;
-				} else {
-					return transfer;
+	transfersAmount: (destination, amount, orderID) => {
+		return new Promise((Resolved, Reject) => {
+			stripe.transfers.create(
+				{
+					amount,
+					currency: 'usd',
+					destination,
+					transfer_group: orderID,
+				},
+				function (err, transfer) {
+					if (err) {
+						DB.save('strips_fail_logs', {
+							informations: JSON.stringify(err),
+							user_id: orderID,
+							type: 6,
+						});
+						Reject(err);
+					} else {
+						Resolved(transfer);
+					}
 				}
-			}
-		);
+			);
+		});
 	},
-};
-
-const updateAccount = async (user_id, Response, token) => {
-	const userInfo = await DB.find('users', 'first', {
-		conditions: {
-			id: user_id,
-		},
-	});
-	try {
-		await createBankAccount(userInfo.strip_id, token);
-		await DB.save('users', {
-			id: user_id,
-			stripe_connect: 1,
-		});
-		apis.sendPush(user_id, {
-			message:
-				'Your account successfully link with stripe now you will add your product',
-			data: [],
-			notification_code: 10,
-		});
-	} catch (err) {
-		return Response.render('error', {
-			message: 'Something went wrong try later',
-			error: {
-				status: 400,
-			},
-		});
-	}
 };
 const createBankAccount = async (stripID, bankAccountDetails, userID) => {
 	const bank_account = {
@@ -206,7 +180,6 @@ const createBankAccount = async (stripID, bankAccountDetails, userID) => {
 		account_holder_type: 'individual',
 		...JSON.parse(bankAccountDetails),
 	};
-	console.log(bank_account);
 	stripe.tokens.create(
 		{
 			bank_account,

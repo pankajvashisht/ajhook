@@ -3,6 +3,7 @@ const Db = require('../../../libary/sqlBulider');
 const ApiError = require('../../Exceptions/ApiError');
 const { lang } = require('../../../config');
 const App = require('../../../libary/CommanMethod');
+const PaymentController = require('./PaymentController');
 const DB = new Db();
 
 class ApiController {
@@ -137,6 +138,50 @@ class ApiController {
 			pushObject['token'] = User.device_token;
 			App.send_push(pushObject);
 		}
+	}
+	async tranferMoney(amount, orderDetails, user_type) {
+		const { shop_id, driver_id, id } = orderDetails;
+		const user_id = user_type === 2 ? shop_id : driver_id;
+		const userInfo = DB.find('users', 'first', {
+			conditions: {
+				user_type,
+				id: user_id,
+			},
+			fields: ['strip_id'],
+		});
+		PaymentController.transfersAmount(userInfo.strip_id, amount, id)
+			.then((data) => {
+				const updateOrder = {
+					id,
+				};
+				if (user_type === 2) {
+					updateOrder['shop_money'] = amount;
+				} else {
+					updateOrder['driver_money'] = amount;
+				}
+				DB.save('orders', {
+					id,
+					updateOrder,
+				});
+				DB.save('amount_transfers', {
+					user_id,
+					amount,
+					checkout_details: JSON.stringify(data),
+					order_id: id,
+					user_type,
+					checkout_status: 1,
+				});
+			})
+			.catch((err) => {
+				DB.save('amount_transfers', {
+					user_id,
+					amount,
+					order_id: id,
+					user_type,
+					checkout_details: JSON.stringify(err),
+					checkout_status: 0,
+				});
+			});
 	}
 
 	async userDetails(id) {

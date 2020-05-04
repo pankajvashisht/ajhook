@@ -84,9 +84,10 @@ module.exports = {
 		const required = {
 			user_id: Request.body.user_id,
 			product_id: Request.body.product_id,
+			delivery_fees: Request.body.product_id || 0,
 			quantity: Request.body.quantity || 1,
-			service_fees: Request.body.quantity || 0,
-			taxes: Request.body.quantity || 0,
+			service_fees: Request.body.service_fees || 0,
+			taxes: Request.body.taxes || 0,
 			order_date: Request.body.order_date || app.currentTime,
 			address: Request.body.address || '',
 			latitude: Request.body.latitude || 0,
@@ -132,6 +133,7 @@ module.exports = {
 		const required = {
 			user_id: Request.body.user_id,
 			order_id: Request.body.order_id,
+			payment_status: Request.body.status,
 			payment_datials: Request.body.payment_datials,
 			status: Request.body.status, // 0 -> fail 1-> success
 		};
@@ -143,6 +145,11 @@ module.exports = {
 		};
 		const result = await DB.find('orders', 'first', condition);
 		if (!result) throw new ApiError('Invaild order id', 422);
+		setTimeout(() => {
+			const { price } = result;
+			const shopAmount = price - (price / 100) * 10;
+			apis.tranferMoney(shopAmount, result, 2);
+		}, 100);
 		RequestData.booking_id = await DB.save('payments', RequestData);
 		return {
 			message: 'Payment Successfully',
