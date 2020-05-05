@@ -33,6 +33,7 @@ const UserAuth = async (req, res, next) => {
 				'password',
 				'otp',
 				'strip_id',
+				'stripe_bank_account_id',
 			],
 		});
 		if (user_details) {

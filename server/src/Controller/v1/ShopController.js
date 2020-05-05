@@ -100,6 +100,8 @@ module.exports = {
 			conditions: {
 				id: RequestData.product_id,
 			},
+			join: ['users on (users.id = products.user_id)'],
+			fields: ['products.*', 'users.strip_id'],
 		});
 		if (!product) throw new ApiError('Invaild product id', 422);
 		RequestData.shop_id = product.user_id;
