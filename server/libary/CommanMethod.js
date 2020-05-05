@@ -14,6 +14,9 @@ const { config, mails, SMS } = require('../config');
 const fs = require('fs');
 const crypto = require('crypto');
 let { MailClient } = require('./mails');
+const https = require('https');
+const url = require('url');
+const twilio = require('twilio');
 module.exports = {
 	send_mail: function (object) {
 		const Sendmails = new MailClient(mails[mails.default]);
@@ -59,19 +62,25 @@ module.exports = {
 		}
 	},
 	send_push: function (data) {
-		const { FCM } = require('push-notification-node');
 		const GOOGLE_KEY = config.GOOGLE_KEY; //put your server key here
-		console.log(GOOGLE_KEY);
-		const fcm = new FCM(GOOGLE_KEY);
-		const body = {
-			body: data.message,
-			title: config.App_name,
-			notificationCode: 1,
+		const headers = {
+			Authorization: `key=${GOOGLE_KEY}`,
+			'Content-Type': 'application/json',
+		};
+		let pushObject = {};
+
+		pushObject = {
+			to: data.token,
+			notification: {
+				body: data.message,
+				title: config.App_name,
+				sound: 'default',
+			},
+			priority: 'high',
 			data,
 		};
-		console.log(body);
-		fcm
-			.sendPromise(data.token, body)
+		const url = 'https://fcm.googleapis.com/fcm/send';
+		POST(url, JSON.stringify(pushObject), headers)
 			.then((res) => {
 				console.log(res);
 			})
@@ -84,7 +93,6 @@ module.exports = {
 	stripe: async function () {},
 	brain_tree: async function () {},
 	sendSMS: (data) => {
-		const twilio = require('twilio');
 		const { accountSid, authToken, sendNumber } = SMS[SMS.default];
 		const client = new twilio(accountSid, authToken);
 		client.messages
@@ -208,3 +216,31 @@ module.exports = {
 		return Math.round(new Date().getTime() / 1000, 0);
 	},
 };
+
+function POST(apiUrl, data, headers) {
+	return new Promise((resolve, reject) => {
+		const host = url.parse(apiUrl).hostname;
+		const path = url.parse(apiUrl).pathname;
+		const options = {
+			host,
+			path,
+			method: 'post',
+			headers,
+		};
+		const request = https.request(options, function (res) {
+			res.setEncoding('utf-8');
+			let responseString = '';
+			res.on('data', function (data) {
+				responseString += data;
+			});
+			request.on('error', function (error) {
+				reject(error);
+			});
+			res.on('end', function () {
+				resolve(responseString);
+			});
+		});
+		request.write(data);
+		request.end();
+	});
+}
