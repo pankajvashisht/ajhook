@@ -98,7 +98,7 @@ module.exports = {
 		const RequestData = await apis.vaildation(required, {});
 		const product = await DB.find('products', 'first', {
 			conditions: {
-				id: RequestData.product_id,
+				'products.id': RequestData.product_id,
 			},
 			join: ['users on (users.id = products.user_id)'],
 			fields: ['products.*', 'users.strip_id'],
