@@ -30,7 +30,7 @@ module.exports = {
 			message = 'Order has been completed';
 			pushMessage = message;
 			setTimeout(() => {
-				apis.tranferMoney(10, order_info, 3);
+				apis.tranferMoney(order_info.delivery_fees, order_info, 3);
 			}, 100);
 		}
 		setTimeout(() => {

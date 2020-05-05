@@ -189,6 +189,7 @@ module.exports = {
 					amount,
 					currency: 'usd',
 					destination,
+					source_transaction: 'pm_1Gf963B9dxxkqRyNUEwLZOR9',
 					transfer_group: orderID,
 				},
 				function (err, transfer) {
