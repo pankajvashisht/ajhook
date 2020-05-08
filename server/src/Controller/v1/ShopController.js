@@ -120,13 +120,6 @@ module.exports = {
 		});
 		RequestData.order_id = await DB.save('orders', RequestData);
 		product.order_id = RequestData.order_id;
-		setTimeout(() => {
-			apis.sendPush(RequestData.shop_id, {
-				message: 'order completed',
-				data: product,
-				notification_code: 1,
-			});
-		}, 100);
 		return {
 			message: 'Order add Successfully',
 			data: RequestData,
@@ -146,10 +139,10 @@ module.exports = {
 				id: RequestData.order_id,
 			},
 		};
-		const result = await DB.find('orders', 'first', condition);
-		if (!result) throw new ApiError('Invaild order id', 422);
+		const orderDetails = await DB.find('orders', 'first', condition);
+		if (!orderDetails) throw new ApiError('Invaild order id', 422);
 		setTimeout(() => {
-			const { price } = result;
+			const { price, shop_id, product_details } = orderDetails;
 			const { order_id, payment_status } = RequestData;
 			DB.save('orders', {
 				id: order_id,
@@ -157,8 +150,13 @@ module.exports = {
 				payment_datials: JSON.stringify(payment_datials),
 			});
 			if (parseInt(payment_status) === 1) {
+				apis.sendPush(shop_id, {
+					message: 'order completed',
+					data: JSON.parse(product_details),
+					notification_code: 1,
+				});
 				const shopAmount = price - (price / 100) * 10;
-				apis.tranferMoney(parseInt(shopAmount), result, 2);
+				apis.tranferMoney(parseInt(shopAmount), orderDetails, 2);
 			}
 		}, 100);
 		RequestData.booking_id = await DB.save('payments', RequestData);
@@ -215,7 +213,7 @@ module.exports = {
 		if (user_type === 1) {
 			conditions['user_id'] = user_id;
 		} else if (user_type === 2) {
-			conditions['shop_id'] = user_id;
+			Object.assign(conditions, { shop_id: user_id, payment_status: 1 });
 		} else {
 			conditions['driver_id'] = user_id;
 		}
