@@ -143,7 +143,7 @@ module.exports = {
 		if (!orderDetails) throw new ApiError('Invaild order id', 422);
 		setTimeout(() => {
 			const { price, shop_id, product_details } = orderDetails;
-			const { order_id, payment_status } = RequestData;
+			const { order_id, payment_status, payment_datials } = RequestData;
 			DB.save('orders', {
 				id: order_id,
 				payment_status,
