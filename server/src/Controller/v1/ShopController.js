@@ -122,7 +122,7 @@ module.exports = {
 		product.order_id = RequestData.order_id;
 		setTimeout(() => {
 			apis.sendPush(RequestData.shop_id, {
-				message: 'You have new order',
+				message: 'order completed',
 				data: product,
 				notification_code: 1,
 			});
