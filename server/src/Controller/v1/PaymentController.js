@@ -60,9 +60,9 @@ module.exports = {
 	},
 	stripeHook: async (Request, Response) => {
 		const {
-			query,
+			query: { stripe_id },
 			body,
-			params: { user_id, stripe_id },
+			params: { user_id },
 		} = Request;
 		if (query.type === 'success') {
 			const accountInfo = await stripe.accounts.retrieve(stripe_id);
@@ -110,8 +110,8 @@ module.exports = {
 				stripe.accountLinks.create(
 					{
 						account: strip_id,
-						failure_url: `${appURL}apis/v1/stripe-integration/${user_id}/${strip_id}?type=fail`,
-						success_url: `${appURL}apis/v1/stripe-integration/${user_id}/${strip_id}?type=success`,
+						failure_url: `${appURL}apis/v1/stripe-integration/${user_id}?type=fail&stripe_id=${strip_id}`,
+						success_url: `${appURL}apis/v1/stripe-integration/${user_id}?type=success&stripe_id=${strip_id}`,
 						type: 'custom_account_verification',
 					},
 					function (err, accountLink) {
