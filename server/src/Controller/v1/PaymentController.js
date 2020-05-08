@@ -60,6 +60,7 @@ module.exports = {
 	},
 	stripeHook: async (Request, Response) => {
 		const {
+			query,
 			query: { stripe_id },
 			body,
 			params: { user_id },
