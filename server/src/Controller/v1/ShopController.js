@@ -150,8 +150,16 @@ module.exports = {
 		if (!result) throw new ApiError('Invaild order id', 422);
 		setTimeout(() => {
 			const { price } = result;
-			const shopAmount = price - (price / 100) * 10;
-			apis.tranferMoney(parseInt(shopAmount), result, 2);
+			const { order_id, payment_status } = RequestData;
+			DB.save('orders', {
+				id: order_id,
+				payment_status,
+				payment_datials: JSON.stringify(payment_datials),
+			});
+			if (parseInt(payment_status) === 1) {
+				const shopAmount = price - (price / 100) * 10;
+				apis.tranferMoney(parseInt(shopAmount), result, 2);
+			}
 		}, 100);
 		RequestData.booking_id = await DB.save('payments', RequestData);
 		return {
