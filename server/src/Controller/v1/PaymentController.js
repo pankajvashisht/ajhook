@@ -62,13 +62,19 @@ module.exports = {
 		const {
 			query,
 			body,
-			params: { user_id },
+			params: { user_id, stripe_id },
 		} = Request;
 		if (query.type === 'success') {
-			await DB.save('users', {
-				id: user_id,
-				stripe_connect: 1,
-			});
+			const accountInfo = await stripe.accounts.retrieve(stripe_id);
+			const {
+				capabilities: { card_payments, transfers },
+			} = accountInfo;
+			if (card_payments === 'active' && transfers === 'active') {
+				await DB.save('users', {
+					id: user_id,
+					stripe_connect: 1,
+				});
+			}
 			// apis.sendPush(user_id, {
 			// 	message:
 			// 		'Your account successfully link with stripe now you will add your product',
@@ -104,8 +110,8 @@ module.exports = {
 				stripe.accountLinks.create(
 					{
 						account: strip_id,
-						failure_url: `${appURL}apis/v1/stripe-integration/${user_id}?type=fail`,
-						success_url: `${appURL}apis/v1/stripe-integration/${user_id}?type=success`,
+						failure_url: `${appURL}apis/v1/stripe-integration/${user_id}/${strip_id}?type=fail`,
+						success_url: `${appURL}apis/v1/stripe-integration/${user_id}/${strip_id}?type=success`,
 						type: 'custom_account_verification',
 					},
 					function (err, accountLink) {
