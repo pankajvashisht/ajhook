@@ -24,7 +24,7 @@ module.exports = {
 		let pushMessage = 'driver is on the way please keep your id proof ready';
 		if (parseInt(order_status) === 4) {
 			DB.save('users', {
-				id: requestData.user_id,
+				id: requestData.driver_id,
 				is_free: 1,
 			});
 			message = 'Order has been completed';
