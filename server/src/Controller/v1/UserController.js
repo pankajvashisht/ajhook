@@ -219,6 +219,7 @@ class UserController extends ApiController {
 			name: req.body.name,
 			is_free: req.body.is_free,
 			is_online: req.body.is_online,
+			stripe_connect: req.body.stripe_connect,
 		};
 		const request_data = await super.vaildation(required, non_required);
 		if (req.files && req.files.profile) {
