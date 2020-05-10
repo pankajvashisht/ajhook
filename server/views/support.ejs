@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+	<!--
+
+Page    : index / MobApp
+Version : 1.0
+Author  : Colorlib
+URI     : https://colorlib.com
+
+ -->
+
+	<head>
+		<title>AJ Hookah Express</title>
+		<!-- Required meta tags -->
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, shrink-to-fit=no"
+		/>
+		<meta
+			name="description"
+			content="Mobland - Mobile App Landing Page Template"
+		/>
+		<meta
+			name="keywords"
+			content="HTML5, bootstrap, mobile, app, landing, ios, android, responsive"
+		/>
+
+		<!-- Font -->
+		<link rel="dns-prefetch" href="//fonts.googleapis.com" />
+		<link
+			href="https://fonts.googleapis.com/css?family=Rubik:300,400,500"
+			rel="stylesheet"
+		/>
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="<%= appUrl %>css/bootstrap.min.css" />
+		<!-- Themify Icons -->
+		<link rel="stylesheet" href="<%= appURL %>css/themify-icons.css" />
+		<!-- Owl carousel -->
+		<link rel="stylesheet" href="<%= appURL %>css/owl.carousel.min.css" />
+		<!-- Main css -->
+		<link href="<%= appURL %>css/style.css" rel="stylesheet" />
+	</head>
+
+	<body data-spy="scroll" data-target="#navbar" data-offset="30">
+		<!-- Nav Menu -->
+
+		<div class="nav-menu fixed-top">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<nav class="navbar navbar-dark navbar-expand-lg">
+							<a class="navbar-brand" href="/"
+								><img
+									src="images/logo.png"
+									class="img-fluid"
+									style="height: 50px;"
+									alt="logo"
+							/></a>
+							<button
+								class="navbar-toggler"
+								type="button"
+								data-toggle="collapse"
+								data-target="#navbar"
+								aria-controls="navbar"
+								aria-expanded="false"
+								aria-label="Toggle navigation"
+							>
+								<span class="navbar-toggler-icon"></span>
+							</button>
+							<div class="collapse navbar-collapse" id="navbar">
+								<ul class="navbar-nav ml-auto">
+									<li class="nav-item">
+										<a class="nav-link active" href="<%= appURL %>welcome#home"
+											>HOME <span class="sr-only">(current)</span></a
+										>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="<%= appURL %>welcome#about_us"
+											>ABOUT US</a
+										>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="<%= appURL %>welcome#features"
+											>FEATURES</a
+										>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="<%= appURL %>support">Support</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="<%= appURL %>welcome#contact"
+											>CONTACT</a
+										>
+									</li>
+								</ul>
+							</div>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="section" id="support">
+			<div class="container">
+				<div class="section-title" style="margin-bottom: 0rem;">
+					<h3>Contant Us</h3>
+					<p class="mb-4" style="color: black;">
+						<strong>Please send your Query</strong>
+					</p>
+				</div>
+				<ul style="padding-left: 9vw;">
+					<form method="get" class="needs-validation" novalidate>
+						<div class="form-group">
+							<label for="uname">Name:</label>
+							<input
+								type="text"
+								class="form-control"
+								id="name"
+								placeholder="Enter Name"
+								name="name"
+								required
+							/>
+							<div class="valid-feedback">Valid.</div>
+							<div class="invalid-feedback">Please fill out this field.</div>
+						</div>
+						<div class="form-group">
+							<label for="pwd">Email:</label>
+							<input
+								type="email"
+								class="form-control"
+								id="email"
+								placeholder="Enter Email"
+								name="email"
+								required
+							/>
+							<div class="valid-feedback">Valid.</div>
+							<div class="invalid-feedback">Please fill out this field.</div>
+						</div>
+						<div class="form-group">
+							<label for="message">Message</label>
+							<textarea
+								required
+								id="message"
+								name="message"
+								class="form-control"
+								placeholder="Write something.."
+								style="height: 200px;"
+							></textarea>
+							<div class="valid-feedback">Valid.</div>
+							<div class="invalid-feedback">Please fill out this field.</div>
+						</div>
+						<button type="submit" class="btn btn-primary">Submit</button>
+					</form>
+				</ul>
+			</div>
+		</div>
+		<!-- // end .section -->
+		<footer class="my-5 text-center" class="light-bg py-5">
+			<!-- Copyright removal is not prohibited! -->
+			<p class="mb-2"><small>COPYRIGHT © 2020. AJ Hookah Express</small></p>
+
+			<small>
+				<a
+					href="https://www.termsfeed.com/terms-conditions/d56fc9f2ab9be7cf82b50e3b946d4a47"
+					class="m-2"
+					>Terms & Conditions</a
+				>
+				<a
+					href="https://www.termsfeed.com/privacy-policy/05b489c659e014e5832f6fa83d73d271"
+					class="m-2"
+					>Privacy Policy</a
+				>
+			</small>
+		</footer>
+
+		<!-- jQuery and Bootstrap -->
+		<script src="<%= appURL %>js/jquery-3.2.1.min.js"></script>
+		<script src="<%= appURL %>js/bootstrap.bundle.min.js"></script>
+		<!-- Plugins JS -->
+		<script src="<%= appURL %>js/owl.carousel.min.js"></script>
+		<!-- Custom JS -->
+		<script src="<%= appURL %>js/script.js"></script>
+	</body>
+</html>
+<script>
+	// Disable form submissions if there are invalid fields
+	(function () {
+		'use strict';
+		window.addEventListener(
+			'load',
+			function () {
+				// Get the forms we want to add validation styles to
+				var forms = document.getElementsByClassName('needs-validation');
+				// Loop over them and prevent submission
+				var validation = Array.prototype.filter.call(forms, function (form) {
+					form.addEventListener(
+						'submit',
+						function (event) {
+							if (form.checkValidity() === false) {
+								event.preventDefault();
+								event.stopPropagation();
+							}
+							form.classList.add('was-validated');
+						},
+						false
+					);
+				});
+			},
+			false
+		);
+	})();
+</script>
